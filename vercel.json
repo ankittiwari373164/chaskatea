@@ -1,0 +1,28 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": null,
+  "outputDirectory": "public",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "functions": {
+    "api/index.js": { "maxDuration": 30, "includeFiles": "lib/**" }
+  },
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "/api/index" },
+    { "source": "/uploads/:key", "destination": "/api/index" },
+    { "source": "/account", "destination": "/account/index.html" },
+    { "source": "/admin", "destination": "/admin/index.html" },
+    { "source": "/shipping-returns", "destination": "/policy.html" },
+    { "source": "/privacy", "destination": "/policy.html" },
+    { "source": "/terms", "destination": "/policy.html" }
+  ],
+  "headers": [
+    { "source": "/img/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }] },
+    { "source": "/(.*)", "headers": [
+      { "key": "X-Content-Type-Options", "value": "nosniff" },
+      { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+      { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+    ] }
+  ]
+}

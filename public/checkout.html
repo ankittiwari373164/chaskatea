@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Checkout — ChaskaTea</title><meta name="description" content="ChaskaTea — premium natural Assam tea. Free delivery, cash on delivery, prepaid savings.">
+<meta name="theme-color" content="#2e1f7a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="ChaskaTea">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/img/icon-192.png"><link rel="apple-touch-icon" href="/img/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,0..100;1,9..144,400..700,0..100&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css?v=3"><link rel="stylesheet" href="/css/bold.css?v=5"><link rel="stylesheet" href="/css/theme.css?v=11">
+</head><body class="">
+<div id="chrome-top"></div>
+<main id="main">
+
+<div class="wrap"><div class="page-head"><div class="steps-bar"><span>1 Cart</span><span class="on">2 Details &amp; payment</span><span>3 Done</span></div><h1 style="font-size:clamp(2rem,5vw,3.2rem)">Checkout</h1></div>
+<div id="co"><div class="skeleton"></div></div></div>
+
+</main>
+<div id="chrome-foot"></div>
+<script src="/js/app.js?v=6"></script><script src="/js/fx.js?v=5" defer></script>
+<script>
+
+CT.ready(async()=>{
+  const $=CT.$, P=CT.cfg.settings.payments; const url=new URL(location.href); const bp=url.searchParams.get('buy');
+  let items=CT.cart, single=false;
+  if(bp){single=true; const n=Number(bp); items=n>1?[{id:n,qty:1}]:CT.ls.get('ct_buy',[])}
+  if(!items.length){$('#co').innerHTML='<div class="empty"><div class="big"></div><h3>Nothing to check out</h3><a class="btn" href="/shop">Explore the collection</a></div>';return}
+  let pm=P.cod.enabled?'cod':(P.razorpay.enabled?'razorpay':'cod'); if(P.razorpay.enabled&&P.prepaidDiscount)pm='razorpay';
+  let coupon=CT.ls.get('ct_coupon',''); let q=null, addrId=null; const U=CT.user, addrs=U?(await CT.api('/api/account/addresses')).addresses:[];
+  if(addrs.length){addrId=(addrs.find(a=>a.isDefault)||addrs[0]).id}
+  const f=(id,l,v='',ph='',type='text',extra='')=>`<div class="fg"><label class="lb" for="${id}">${l}</label><input class="in" id="${id}" type="${type}" value="${CT.esc(v)}" placeholder="${ph}" ${extra}></div>`;
+  const draw=()=>{
+    const A=addrs.find(a=>a.id===addrId);
+    $('#co').innerHTML=`<div class="cartwrap"><div>
+     ${!U?`<div class="panel" style="background:rgba(111,163,36,.08)"><b>Have an account?</b> <a href="/login?next=/checkout" style="font-weight:500;color:var(--gold-d)">Log in</a> for saved addresses &amp; order tracking — or continue as guest.</div>`:''}
+     <div class="panel"><h3><i>1</i>Delivery details</h3>
+      ${addrs.length?`<div class="addr-pick">${addrs.map(a=>`<label><input type="radio" name="ad" value="${a.id}" ${a.id===addrId?'checked':''}><span><b>${CT.esc(a.name)}</b> · ${CT.esc(a.label)}<br>${CT.esc(a.line1)}${a.line2?', '+CT.esc(a.line2):''}, ${CT.esc(a.city)}, ${CT.esc(a.state)} ${CT.esc(a.pincode)}<br>${CT.esc(a.phone)}</span></label>`).join('')}<label><input type="radio" name="ad" value="new" ${addrId===null?'checked':''}><span><b>+ Use a new address</b></span></label></div>`:''}
+      <div id="af" style="${A?'display:none':''}">
+      <div class="row2">${f('n','Full name',U?U.name:'','Your name','text','autocomplete="name"')}${f('ph','Mobile number',U?U.phone:'','10-digit number','tel','inputmode="numeric" maxlength="10" autocomplete="tel-national"')}</div>
+      ${f('em','Email (for order updates)',U?U.email:'','you@email.com','email','autocomplete="email"')}
+      ${f('l1','Address','','House no., street, area','text','autocomplete="address-line1"')}${f('l2','Landmark (optional)','','Near…')}
+      <div class="row2">${f('pin','Pincode','','6 digits','tel','inputmode="numeric" maxlength="6" autocomplete="postal-code"')}${f('city','City','','','text','autocomplete="address-level2"')}</div>
+      <div class="fg"><label class="lb" for="st">State</label><select class="in" id="st">${CT.stateOpts('')}</select></div>
+      ${U?'<label style="display:flex;gap:.5rem;align-items:center;font-weight:700"><input type="checkbox" id="sv" checked> Save this address</label>':''}</div>
+      <div class="fg" style="margin-top:1rem"><label class="lb" for="nt">Note for us (optional)</label><input class="in" id="nt" placeholder="Anything we should know?"></div></div>
+     <div class="panel"><h3><i>2</i>Payment</h3><div class="pay">
+       ${P.razorpay.enabled?`<label><input type="radio" name="pm" value="razorpay" ${pm==='razorpay'?'checked':''}><span><b>Pay online</b><small>UPI, cards, netbanking, wallets — secured by Razorpay</small></span>${P.prepaidDiscount?'<span class="tag">SAVE MORE</span>':''}</label>`:`<label style="opacity:.55"><input type="radio" disabled><span><b>Pay online</b><small>UPI / cards / netbanking — coming soon</small></span></label>`}
+       ${P.cod.enabled?`<label><input type="radio" name="pm" value="cod" ${pm==='cod'?'checked':''}><span><b>Cash on delivery</b><small>Pay when your tea arrives${P.cod.fee?` (+₹${P.cod.fee} fee)`:''}</small></span></label>`:''}
+     </div></div></div>
+     <aside><div class="sum"><h3>Your order</h3><div id="lines"></div><div class="coupon"><input class="in" id="cc" placeholder="Coupon code" value="${CT.esc(coupon)}" autocapitalize="characters"><button class="btn sm dark" id="ca">Apply</button></div><div class="cmsg" id="cm"></div><div id="tot"></div>
+      <div class="checkout-sticky"><button class="btn block" id="place">Place order</button></div>
+      <p style="font-size:.76rem;color:var(--muted);text-align:center;margin:.8rem 0 0">By placing your order you agree to our <a href="/terms">Terms</a> &amp; <a href="/shipping-returns">Shipping policy</a>.</p></div></aside></div>`;
+    $$('[name=ad]').forEach(r=>r.onchange=()=>{addrId=r.value==='new'?null:Number(r.value);$('#af').style.display=addrId?'none':'block'});
+    $$('[name=pm]').forEach(r=>r.onchange=()=>{pm=r.value;quote()});
+    $('#ca').onclick=()=>{coupon=$('#cc').value.trim();CT.ls.set('ct_coupon',coupon);quote()};
+    $('#place').onclick=place; quote();
+  };
+  const $$=CT.$$;
+  async function quote(){
+    q=await CT.api('/api/cart/quote',{body:{items,coupon,paymentMethod:pm}});
+    $('#lines').innerHTML=q.lines.map(l=>`<div class="r" style="font-size:.9rem;gap:.6rem"><span>${CT.esc(l.name.replace('ChaskaTea ',''))} × ${l.qty}</span><span>${CT.inr(l.price*l.qty)}</span></div>`).join('');
+    $('#cm').className='cmsg '+(q.couponError?'bad':q.coupon?'ok':''); $('#cm').textContent=q.couponError||(q.coupon?`“${q.coupon.code}” applied — saved ${CT.inr(q.coupon.amount)}`:'');
+    $('#tot').innerHTML=`<div class="r"><span>Subtotal</span><span>${CT.inr(q.subtotal)}</span></div>
+     ${q.offerDiscount?`<div class="r g"><span>Offer</span><span>− ${CT.inr(q.offerDiscount)}</span></div>`:''}${q.discount?`<div class="r g"><span>Coupon</span><span>− ${CT.inr(q.discount)}</span></div>`:''}
+     ${q.prepaidDiscount?`<div class="r g"><span>Online payment discount</span><span>− ${CT.inr(q.prepaidDiscount)}</span></div>`:''}
+     <div class="r"><span>Delivery</span><span>${q.shipping?CT.inr(q.shipping):'<b style="color:var(--ok)">FREE</b>'}</span></div>${q.codFee?`<div class="r"><span>COD fee</span><span>${CT.inr(q.codFee)}</span></div>`:''}
+     <div class="r t"><span>Total</span><span>${CT.inr(q.total)}</span></div>`;
+    const codOff=pm==='cod'&&!q.codAllowed; $('#place').textContent=pm==='razorpay'?`Pay ${CT.inr(q.total)}`:`Place order · ${CT.inr(q.total)}`;
+    if(codOff)CT.toast('COD is not available for this order value — please pay online',{bad:1});
+  }
+  function readAddr(){
+    if(addrId){const a=addrs.find(a=>a.id===addrId);return Object.assign({},a)}
+    const g=i=>$('#'+i).value.trim();
+    return {name:g('n'),phone:g('ph'),email:g('em'),line1:g('l1'),line2:g('l2'),pincode:g('pin'),city:g('city'),state:g('st')};
+  }
+  async function place(){
+    const btn=$('#place'); const a=readAddr();
+    if(!a.name||!/^[6-9]\d{9}$/.test((a.phone||'').replace(/\D/g,'').slice(-10))){CT.toast('Please enter your name and a valid 10-digit mobile number',{bad:1});return}
+    if(!a.line1||!/^\d{6}$/.test(a.pincode||'')||!a.city||!a.state){CT.toast('Please complete your address (pincode, city, state)',{bad:1});return}
+    btn.classList.add('loading');btn.disabled=true;
+    try{
+      const r=await CT.api('/api/orders',{body:{items,coupon,paymentMethod:pm,address:a,notes:$('#nt').value,saveAddress:$('#sv')?.checked}});
+      sessionStorage.setItem('ct_last',JSON.stringify({number:r.order.number,phone:a.phone}));
+      if(r.razorpay){await pay(r,a,btn);return}
+      done(r.order.number);
+    }catch(e){CT.toast(e.message,{bad:1});btn.classList.remove('loading');btn.disabled=false}
+  }
+  function done(n){ if(single)CT.ls.set('ct_buy',[]); else CT.clearCart(); CT.ls.set('ct_coupon',''); location.href='/order-success?n='+n }
+  function loadRzp(){return new Promise((res,rej)=>{if(window.Razorpay)return res();const s=document.createElement('script');s.src='https://checkout.razorpay.com/v1/checkout.js';s.onload=res;s.onerror=()=>rej(new Error('Could not load the payment window. Check your connection.'));document.head.appendChild(s)})}
+  async function pay(r,a,btn){
+    const num=r.order.number;
+    try{await loadRzp()}catch(e){CT.toast(e.message,{bad:1});btn.classList.remove('loading');btn.disabled=false;return}
+    const z=r.razorpay; let paid=false;
+    const rz=new Razorpay({key:z.keyId,amount:z.amount,currency:z.currency,name:z.name,description:'Order '+num,order_id:z.orderId,prefill:z.prefill,theme:{color:'#4e8a16'},
+      handler:async resp=>{paid=true;try{await CT.api(`/api/orders/${num}/razorpay/verify`,{body:resp});done(num)}catch(e){CT.toast(e.message,{bad:1});btn.classList.remove('loading');btn.disabled=false}},
+      modal:{ondismiss:async()=>{ if(paid)return; await CT.api(`/api/orders/${num}/razorpay/failed`,{body:{phone:a.phone,reason:'Payment window closed'}}).catch(()=>{});
+        const sh=CT.sheet('Payment not completed',`<p>Your order <b>${num}</b> is saved but unpaid. Try paying again, or switch to Cash on Delivery by placing a new order.</p><button class="btn block" id="rt">Retry payment</button>`);
+        CT.$('#rt',sh).onclick=async()=>{sh.close();try{const rr=await CT.api(`/api/orders/${num}/razorpay/retry`,{body:{phone:a.phone}});await pay(rr,a,btn)}catch(e){CT.toast(e.message,{bad:1})}};
+        btn.classList.remove('loading');btn.disabled=false}}});
+    rz.on('payment.failed',resp=>{CT.api(`/api/orders/${num}/razorpay/failed`,{body:{phone:a.phone,reason:(resp.error&&resp.error.description)||'Payment failed'}}).catch(()=>{});CT.toast((resp.error&&resp.error.description)||'Payment failed — please try again',{bad:1})});
+    rz.open();
+  }
+  draw();
+});
+
+</script>
+</body></html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Order placed — ChaskaTea</title><meta name="description" content="ChaskaTea — premium natural Assam tea. Free delivery, cash on delivery, prepaid savings.">
+<meta name="theme-color" content="#2e1f7a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="ChaskaTea">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/img/icon-192.png"><link rel="apple-touch-icon" href="/img/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,0..100;1,9..144,400..700,0..100&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css?v=3"><link rel="stylesheet" href="/css/bold.css?v=5"><link rel="stylesheet" href="/css/theme.css?v=11">
+</head><body class="">
+<div id="chrome-top"></div>
+<main id="main">
+<div class="wrap"><div id="ok" class="success"><div class="skeleton" style="max-width:520px;margin:auto"></div></div></div>
+</main>
+<div id="chrome-foot"></div>
+<script src="/js/app.js?v=6"></script><script src="/js/fx.js?v=5" defer></script>
+<script>
+
+CT.ready(async()=>{
+  const $=CT.$, n=new URL(location.href).searchParams.get('n'); let last={}; try{last=JSON.parse(sessionStorage.getItem('ct_last')||'{}')}catch(e){}
+  let o; try{ o=CT.user?(await CT.api('/api/account/orders/'+encodeURIComponent(n))).order:(await CT.api('/api/track',{body:{number:n,phone:last.phone||''}})).order }catch(e){
+    try{o=(await CT.api('/api/track',{body:{number:n,phone:last.phone||''}})).order}catch(e2){ $('#ok').innerHTML='<h1 style="font-size:2.4rem">Order not found</h1><p>Use <a href="/track"><b>Track order</b></a> with your order number and phone.</p>';return}}
+  const cod=o.paymentMethod==='cod';
+  $('#ok').innerHTML=`<svg class="check" viewBox="0 0 120 120"><circle cx="60" cy="60" r="54"/><path d="M36 62l18 18 32-38"/></svg>
+   <h1 style="font-size:clamp(2.6rem,6vw,4rem)">Thank you.</h1><p style="font-size:1.15rem;margin:1rem 0 .3rem">Your order <b>${CT.esc(o.number)}</b> is ${o.status==='pending_payment'?'waiting for payment':'confirmed'}.</p>
+   <p style="color:var(--muted)">${cod?'Pay ₹'+o.total.toLocaleString('en-IN')+' in cash when it arrives.':o.paymentStatus==='paid'?'Payment received. Thank you.':'We’ll update you as soon as the payment clears.'}</p>
+   <div class="panel" style="max-width:560px;margin:2rem auto;text-align:left"><h3>Order summary</h3>${o.items.map(i=>`<div class="r" style="display:flex;justify-content:space-between;padding:.3rem 0"><span>${CT.esc(i.name.replace('ChaskaTea ',''))} × ${i.qty}</span><span>${CT.inr(i.price*i.qty)}</span></div>`).join('')}
+    <div style="border-top:1px solid var(--hair);margin-top:.8rem;padding-top:.9rem;display:flex;justify-content:space-between;font-family:var(--font-d);font-size:1.5rem;font-weight:500"><span>Total</span><span>${CT.inr(o.total)}</span></div>
+    <p style="margin:1rem 0 0;font-size:.9rem;color:var(--ink2)"><b>Delivering to:</b><br>${CT.esc(o.address.name)}, ${CT.esc(o.address.line1)}, ${CT.esc(o.address.city)} ${CT.esc(o.address.pincode)}</p></div>
+   <div style="display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap"><a class="btn" href="/track?n=${CT.esc(o.number)}">Track order</a><a class="btn ghost" href="/shop">Keep shopping</a></div>`;
+  CT.confetti();
+});
+
+</script>
+</body></html>

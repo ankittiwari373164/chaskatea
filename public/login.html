@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Log in — ChaskaTea</title><meta name="description" content="ChaskaTea — premium natural Assam tea. Free delivery, cash on delivery, prepaid savings.">
+<meta name="theme-color" content="#2e1f7a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="ChaskaTea">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/img/icon-192.png"><link rel="apple-touch-icon" href="/img/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,0..100;1,9..144,400..700,0..100&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css?v=3"><link rel="stylesheet" href="/css/bold.css?v=5"><link rel="stylesheet" href="/css/theme.css?v=11">
+</head><body class="">
+<div id="chrome-top"></div>
+<main id="main">
+
+<div class="wrap"><div class="authbox"><span class="eyebrow">Welcome back</span><h1 style="margin-top:.6rem">Log in</h1><p style="color:var(--muted)">Track orders, save addresses and checkout faster.</p>
+<form id="f"><div class="fg"><label class="lb" for="email">Email</label><input class="in" id="email" name="email" type="email" required autocomplete="email"></div>
+<div class="fg"><label class="lb" for="password">Password</label><input class="in" id="password" name="password" type="password" required autocomplete="current-password"></div>
+<div class="err" id="e"></div><button class="btn block" id="sub">Log in</button></form>
+<p style="text-align:center;margin:1.2rem 0 0">New here? <a href="#" id="su" style="font-weight:800">Create an account</a></p>
+<p style="text-align:center;font-size:.82rem;color:var(--muted)">Forgot your password? <a href="/contact">Message us</a> and we’ll reset it.</p></div></div>
+</main>
+<div id="chrome-foot"></div>
+<script src="/js/app.js?v=6"></script><script src="/js/fx.js?v=5" defer></script>
+<script>
+const MODE="login";
+CT.ready(()=>{
+  const $=CT.$; const next=new URL(location.href).searchParams.get('next')||'/account';
+  if(CT.user){location.replace(CT.user.role==='admin'?'/admin':safe(next));return}
+  function safe(n){return n.startsWith('/')&&!n.startsWith('//')?n:'/account'}
+  $('#f').onsubmit=async e=>{e.preventDefault();const b=$('#sub');b.classList.add('loading');b.disabled=true;$('#e').textContent='';
+    try{const body=Object.fromEntries(new FormData(e.target));const r=await CT.api('/api/auth/'+MODE,{body});
+      // merge guest wishlist
+      for(const id of CT.ls.get('ct_wish',[]))if(!(r.user.wishlist||[]).includes(id))await CT.api('/api/account/wishlist/'+id,{method:'POST',body:{}}).catch(()=>{});
+      location.href=r.user.role==='admin'?'/admin':safe(next)}
+    catch(er){$('#e').textContent=er.message;b.classList.remove('loading');b.disabled=false}};
+});
+document.addEventListener("click",e=>{if(e.target.id==="su"){e.preventDefault();location.href="/signup"+location.search}});
+</script>
+</body></html>

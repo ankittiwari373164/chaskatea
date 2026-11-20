@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Shop all teas — ChaskaTea</title><meta name="description" content="ChaskaTea — premium natural Assam tea. Free delivery, cash on delivery, prepaid savings.">
+<meta name="theme-color" content="#2e1f7a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="ChaskaTea">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/img/icon-192.png"><link rel="apple-touch-icon" href="/img/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,0..100;1,9..144,400..700,0..100&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css?v=3"><link rel="stylesheet" href="/css/bold.css?v=5"><link rel="stylesheet" href="/css/theme.css?v=11">
+</head><body class="">
+<div id="chrome-top"></div>
+<main id="main">
+
+<div class="wrap"><div class="page-head"><div class="crumbs"><a href="/">Home</a> / <span id="crumb">Shop</span></div><h1 id="ttl" style="font-size:clamp(2.2rem,5vw,3.8rem)">All teas</h1><p id="sub" style="color:var(--muted);margin-top:.6rem"></p></div>
+<div class="toolbar"><div id="chips" style="display:flex;gap:.5rem;flex-wrap:wrap"></div><span class="grow"></span>
+<input class="field" id="q" placeholder="Search teas…" style="max-width:240px;padding:.55em 1em"><select class="select" id="sort" style="padding:.55em 2rem .55em 1em"><option value="">Featured</option><option value="price-asc">Price: low to high</option><option value="price-desc">Price: high to low</option><option value="discount">Biggest discount</option><option value="new">Newest</option></select></div>
+<div class="grid" id="grid"></div><p id="count" style="margin:1.5rem 0 4rem;color:var(--muted);font-weight:700"></p></div>
+
+</main>
+<div id="chrome-foot"></div>
+<script src="/js/app.js?v=6"></script><script src="/js/fx.js?v=5" defer></script>
+<script>
+
+CT.ready(async()=>{
+  const $=CT.$, u=new URL(location.href); let cat=u.searchParams.get('cat')||'all', sort='', q=u.searchParams.get('q')||'';
+  $('#q').value=q;
+  const chips=()=>{ $('#chips').innerHTML=[{slug:'all',name:'All'},...CT.cfg.categories].map(c=>`<button class="chip ${c.slug===cat?'on':''}" data-c="${c.slug}">${CT.esc(c.name)}</button>`).join('') };
+  const load=async()=>{
+    const r=await CT.api(`/api/products?cat=${cat}&sort=${sort}&q=${encodeURIComponent(q)}`);
+    const k=CT.cfg.categories.find(c=>c.slug===cat);
+    $('#ttl').textContent=k?k.name+' tea':'All teas'; $('#sub').textContent=k?k.blurb:'Every pack, every blend. Free delivery across India.'; $('#crumb').textContent=k?k.name:'Shop';
+    document.title=($('#ttl').textContent)+' — ChaskaTea';
+    $('#grid').innerHTML=r.products.length?r.products.map(CT.card).join(''):'<div class="empty" style="grid-column:1/-1"><div class="big"></div><h3>No teas found</h3><p>Try a different search or category.</p></div>';
+    $('#count').textContent=r.products.length+' tea'+(r.products.length===1?'':'s'); CT.reveal(); chips();
+    history.replaceState(null,'',`/shop${cat!=='all'?'?cat='+cat:''}`);
+  };
+  document.addEventListener('click',e=>{const c=e.target.closest('.chip[data-c]');if(c){cat=c.dataset.c;load()}});
+  $('#sort').onchange=e=>{sort=e.target.value;load()}; let t;$('#q').oninput=e=>{clearTimeout(t);t=setTimeout(()=>{q=e.target.value.trim();load()},250)};
+  await load();
+});
+
+</script>
+</body></html>

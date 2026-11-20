@@ -1,0 +1,1 @@
+{"kind": "server", "start": "node server.js", "port": 3000}

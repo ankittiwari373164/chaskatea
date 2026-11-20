@@ -1,0 +1,372 @@
+[
+ {
+  "id": 367,
+  "slug": "chaskatea-supreme-s9-1kg",
+  "name": "ChaskaTea Supreme S9 | 1kg",
+  "category": "Supreme",
+  "weight": "1kg",
+  "grams": 1000,
+  "price": 450,
+  "mrp": 590,
+  "prepaidDiscount": 30,
+  "images": [
+   "/img/s9.webp",
+   "/img/s9-branding-pic.webp"
+  ],
+  "short": "Strong dust tea for families, hotels and chai stalls.",
+  "description": "Supreme is pure dust tea — fine leaf that brews fast and gives a deep, bold cup every time. Made for households, hotels, restaurants and tea stalls that serve chai all day. Har logon ki pasand.",
+  "highlights": [
+   "Fast-brewing, bold colour",
+   "Great for bulk & commercial use",
+   "Rich in taste and aroma",
+   "100% natural tea"
+  ],
+  "stock": 100,
+  "active": true,
+  "featured": true,
+  "tags": []
+ },
+ {
+  "id": 365,
+  "slug": "chaskatea-supreme-s8-1kg",
+  "name": "ChaskaTea Supreme S8 | 1kg",
+  "category": "Supreme",
+  "weight": "1kg",
+  "grams": 1000,
+  "price": 410,
+  "mrp": 520,
+  "prepaidDiscount": 30,
+  "images": [
+   "/img/8n-l41d-6l5s.webp"
+  ],
+  "short": "Strong dust tea for families, hotels and chai stalls.",
+  "description": "Supreme is pure dust tea — fine leaf that brews fast and gives a deep, bold cup every time. Made for households, hotels, restaurants and tea stalls that serve chai all day. Har logon ki pasand.",
+  "highlights": [
+   "Fast-brewing, bold colour",
+   "Great for bulk & commercial use",
+   "Rich in taste and aroma",
+   "100% natural tea"
+  ],
+  "stock": 100,
+  "active": true,
+  "featured": true,
+  "tags": []
+ },
+ {
+  "id": 110,
+  "slug": "chaskatea-supreme-dust-1kg",
+  "name": "ChaskaTea Supreme Dust | 1kg",
+  "category": "Supreme",
+  "weight": "1kg",
+  "grams": 1000,
+  "price": 480,
+  "mrp": 650,
+  "prepaidDiscount": 30,
+  "images": [
+   "/img/chaskatea-supreme-dust-1kg.webp",
+   "/img/supreme-dust-branding.webp"
+  ],
+  "short": "Strong dust tea for families, hotels and chai stalls.",
+  "description": "Supreme is pure dust tea — fine leaf that brews fast and gives a deep, bold cup every time. Made for households, hotels, restaurants and tea stalls that serve chai all day. Har logon ki pasand.",
+  "highlights": [
+   "Fast-brewing, bold colour",
+   "Great for bulk & commercial use",
+   "Rich in taste and aroma",
+   "100% natural tea"
+  ],
+  "stock": 100,
+  "active": true,
+  "featured": false,
+  "tags": []
+ },
+ {
+  "id": 375,
+  "slug": "chaskatea-classic-1kg",
+  "name": "ChaskaTea Classic 1kg",
+  "category": "Classic",
+  "weight": "1kg",
+  "grams": 1000,
+  "price": 510,
+  "mrp": 640,
+  "prepaidDiscount": 30,
+  "images": [
+   "/img/chta1.6.webp",
+   "/img/classic-branding-pic.webp"
+  ],
+  "short": "Everyday kadak chai, the way home makes it.",
+  "description": "Classic is our everyday CTC from Assam — strong enough to stand up to milk, smooth enough to drink all day. Dark liquor, rich aroma, no artificial colour or flavour.",
+  "highlights": [
+   "Strong, kadak body",
+   "Rich aroma, deep colour",
+   "Straight from Assam gardens",
+   "100% natural, nothing added"
+  ],
+  "stock": 100,
+  "active": true,
+  "featured": true,
+  "tags": []
+ },
+ {
+  "id": 377,
+  "slug": "chaskatea-classic-500gm",
+  "name": "ChaskaTea Classic 500g",
+  "category": "Classic",
+  "weight": "500g",
+  "grams": 500,
+  "price": 250,
+  "mrp": 300,
+  "prepaidDiscount": 20,
+  "images": [
+   "/img/chta1.5.webp",
+   "/img/classic-branding-pic.webp"
+  ],
+  "short": "Everyday kadak chai, the way home makes it.",
+  "description": "Classic is our everyday CTC from Assam — strong enough to stand up to milk, smooth enough to drink all day. Dark liquor, rich aroma, no artificial colour or flavour.",
+  "highlights": [
+   "Strong, kadak body",
+   "Rich aroma, deep colour",
+   "Straight from Assam gardens",
+   "100% natural, nothing added"
+  ],
+  "stock": 100,
+  "active": true,
+  "featured": true,
+  "tags": []
+ },
+ {
+  "id": 101,
+  "slug": "chaskatea-classic-250gm",
+  "name": "ChaskaTea Classic 250g",
+  "category": "Classic",
+  "weight": "250g",
+  "grams": 250,
+  "price": 150,
+  "mrp": 180,
+  "prepaidDiscount": 10,
+  "images": [
+   "/img/chta1.4.webp"
+  ],
+  "short": "Everyday kadak chai, the way home makes it.",
+  "description": "Classic is our everyday CTC from Assam — strong enough to stand up to milk, smooth enough to drink all day. Dark liquor, rich aroma, no artificial colour or flavour.",
+  "highlights": [
+   "Strong, kadak body",
+   "Rich aroma, deep colour",
+   "Straight from Assam gardens",
+   "100% natural, nothing added"
+  ],
+  "stock": 100,
+  "active": true,
+  "featured": false,
+  "tags": []
+ },
+ {
+  "id": 370,
+  "slug": "chaskatea-premium-1kg",
+  "name": "ChaskaTea Premium 1kg",
+  "category": "Premium",
+  "weight": "1kg",
+  "grams": 1000,
+  "price": 590,
+  "mrp": 710,
+  "prepaidDiscount": 30,
+  "images": [
+   "/img/tea-1xp-1kg.webp",
+   "/img/premium.webp",
+   "/img/premium-b-randing-pic.webp"
+  ],
+  "short": "Masala chai with elaichi, ginger and cloves already in the pack.",
+  "description": "Premium is Assam tea blended with real masala — elaichi, cloves, ginger and cardamom — so a proper masala chai is one boil away. Smooth, rich and hygienically packed.",
+  "highlights": [
+   "Real elaichi, cloves, ginger & cardamom",
+   "Smooth, rich taste",
+   "Boosts immunity naturally",
+   "Hygienically packed"
+  ],
+  "stock": 100,
+  "active": true,
+  "featured": true,
+  "tags": []
+ },
+ {
+  "id": 371,
+  "slug": "chaskatea-premium-500gm",
+  "name": "ChaskaTea Premium 500g",
+  "category": "Premium",
+  "weight": "500g",
+  "grams": 500,
+  "price": 290,
+  "mrp": 360,
+  "prepaidDiscount": 20,
+  "images": [
+   "/img/tea-1xp-500g.webp"
+  ],
+  "short": "Masala chai with elaichi, ginger and cloves already in the pack.",
+  "description": "Premium is Assam tea blended with real masala — elaichi, cloves, ginger and cardamom — so a proper masala chai is one boil away. Smooth, rich and hygienically packed.",
+  "highlights": [
+   "Real elaichi, cloves, ginger & cardamom",
+   "Smooth, rich taste",
+   "Boosts immunity naturally",
+   "Hygienically packed"
+  ],
+  "stock": 100,
+  "active": true,
+  "featured": true,
+  "tags": []
+ },
+ {
+  "id": 104,
+  "slug": "chaskatea-premium-250gm",
+  "name": "ChaskaTea Premium 250g",
+  "category": "Premium",
+  "weight": "250g",
+  "grams": 250,
+  "price": 180,
+  "mrp": 228,
+  "prepaidDiscount": 10,
+  "images": [
+   "/img/ch-01-250.webp"
+  ],
+  "short": "Masala chai with elaichi, ginger and cloves already in the pack.",
+  "description": "Premium is Assam tea blended with real masala — elaichi, cloves, ginger and cardamom — so a proper masala chai is one boil away. Smooth, rich and hygienically packed.",
+  "highlights": [
+   "Real elaichi, cloves, ginger & cardamom",
+   "Smooth, rich taste",
+   "Boosts immunity naturally",
+   "Hygienically packed"
+  ],
+  "stock": 100,
+  "active": true,
+  "featured": true,
+  "tags": []
+ },
+ {
+  "id": 2497,
+  "slug": "chaskatea-classic-premium-combo1kg-250gms",
+  "name": "ChaskaTea Classic + Premium Combo (1kg + 250g)",
+  "category": "Combo",
+  "weight": "1.25kg",
+  "grams": 1250,
+  "price": 660,
+  "mrp": 899,
+  "prepaidDiscount": 30,
+  "images": [
+   "/img/e624bd44-6523-43e5-b9a0-26437aad7843.webp"
+  ],
+  "short": "Two blends, one saving. Mix Classic and Premium.",
+  "description": "Can't pick? A combo gives you the everyday strength of Classic with the masala warmth of Premium, at a bundle price. Perfect for gifting or stocking up.",
+  "highlights": [
+   "Classic + Premium together",
+   "Bundle savings",
+   "Free delivery across India",
+   "Packed fresh within the week"
+  ],
+  "stock": 100,
+  "active": true,
+  "featured": true,
+  "tags": []
+ },
+ {
+  "id": 2486,
+  "slug": "chaskatea-premium-classic-tea-combo-pack-of-2-500g-250g",
+  "name": "ChaskaTea Premium + Classic Combo (500g + 250g)",
+  "category": "Combo",
+  "weight": "750g",
+  "grams": 750,
+  "price": 420,
+  "mrp": 599,
+  "prepaidDiscount": 30,
+  "images": [
+   "/img/images.webp"
+  ],
+  "short": "Two blends, one saving. Mix Classic and Premium.",
+  "description": "Can't pick? A combo gives you the everyday strength of Classic with the masala warmth of Premium, at a bundle price. Perfect for gifting or stocking up.",
+  "highlights": [
+   "Classic + Premium together",
+   "Bundle savings",
+   "Free delivery across India",
+   "Packed fresh within the week"
+  ],
+  "stock": 100,
+  "active": true,
+  "featured": false,
+  "tags": []
+ },
+ {
+  "id": 2500,
+  "slug": "chaskatea-premium-classic-combo-1kg-250g",
+  "name": "ChaskaTea Premium + Classic Combo (1kg + 250g)",
+  "category": "Combo",
+  "weight": "1.25kg",
+  "grams": 1250,
+  "price": 710,
+  "mrp": 999,
+  "prepaidDiscount": 30,
+  "images": [
+   "/img/509a27a3-0fd4-40ab-b097-704437ac9038.webp"
+  ],
+  "short": "Two blends, one saving. Mix Classic and Premium.",
+  "description": "Can't pick? A combo gives you the everyday strength of Classic with the masala warmth of Premium, at a bundle price. Perfect for gifting or stocking up.",
+  "highlights": [
+   "Classic + Premium together",
+   "Bundle savings",
+   "Free delivery across India",
+   "Packed fresh within the week"
+  ],
+  "stock": 100,
+  "active": true,
+  "featured": false,
+  "tags": []
+ },
+ {
+  "id": 2493,
+  "slug": "chaskatea-premium-classic-tea-combo-pack-of-2-500g-500g",
+  "name": "ChaskaTea Premium + Classic Combo (500g + 500g)",
+  "category": "Combo",
+  "weight": "1kg",
+  "grams": 1000,
+  "price": 500,
+  "mrp": 1299,
+  "prepaidDiscount": 30,
+  "images": [
+   "/img/images-2.webp"
+  ],
+  "short": "Two blends, one saving. Mix Classic and Premium.",
+  "description": "Can't pick? A combo gives you the everyday strength of Classic with the masala warmth of Premium, at a bundle price. Perfect for gifting or stocking up.",
+  "highlights": [
+   "Classic + Premium together",
+   "Bundle savings",
+   "Free delivery across India",
+   "Packed fresh within the week"
+  ],
+  "stock": 100,
+  "active": true,
+  "featured": false,
+  "tags": []
+ },
+ {
+  "id": 2490,
+  "slug": "chaskatea-classic-premium-combo500gms-250gms",
+  "name": "ChaskaTea Classic + Premium Combo (500g + 250g)",
+  "category": "Combo",
+  "weight": "750g",
+  "grams": 750,
+  "price": 400,
+  "mrp": 799,
+  "prepaidDiscount": 30,
+  "images": [
+   "/img/images-1.webp"
+  ],
+  "short": "Two blends, one saving. Mix Classic and Premium.",
+  "description": "Can't pick? A combo gives you the everyday strength of Classic with the masala warmth of Premium, at a bundle price. Perfect for gifting or stocking up.",
+  "highlights": [
+   "Classic + Premium together",
+   "Bundle savings",
+   "Free delivery across India",
+   "Packed fresh within the week"
+  ],
+  "stock": 100,
+  "active": true,
+  "featured": false,
+  "tags": []
+ }
+]

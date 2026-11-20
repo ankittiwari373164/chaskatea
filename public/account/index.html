@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>My account — ChaskaTea</title><meta name="description" content="ChaskaTea — premium natural Assam tea. Free delivery, cash on delivery, prepaid savings.">
+<meta name="theme-color" content="#2e1f7a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="ChaskaTea">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/img/icon-192.png"><link rel="apple-touch-icon" href="/img/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,0..100;1,9..144,400..700,0..100&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css?v=3"><link rel="stylesheet" href="/css/bold.css?v=5"><link rel="stylesheet" href="/css/theme.css?v=11">
+</head><body class="">
+<div id="chrome-top"></div>
+<main id="main">
+
+<div class="wrap"><div class="acct"><nav id="nav"></nav><div id="view"><div class="skeleton"></div></div></div></div>
+</main>
+<div id="chrome-foot"></div>
+<script src="/js/app.js?v=6"></script>
+<script>
+
+CT.ready(async()=>{
+  if(!CT.requireLogin())return; const $=CT.$, $$=CT.$$, U=CT.user;
+  const tabs=[['overview','','Overview'],['orders','','My orders'],['wishlist','','Wishlist'],['addresses','','Addresses'],['profile','','Profile & password']];
+  let addrs=[];
+  const route=()=>{const h=(location.hash||'#overview').slice(1); return h};
+  const nav=()=>{const r=route().split('/')[0];$('#nav').innerHTML=tabs.map(t=>`<a href="#${t[0]}" class="${r===t[0]?'on':''}"><span>${t[1]}</span>${t[2]}</a>`).join('')+`<a href="#" id="lo"><span>⎋</span>Log out</a>`;
+    $('#lo').onclick=async e=>{e.preventDefault();await CT.api('/api/auth/logout',{body:{}});location.href='/'}};
+  const oc=o=>`<a class="ocard" href="#order/${CT.esc(o.number)}"><div class="top"><b>${CT.esc(o.number)}</b><span class="pill ${o.status}">${CT.esc(o.statusLabel)}</span></div><div class="thumbs2">${o.items.slice(0,4).map(i=>`<img src="${CT.esc(i.image)}" alt="" style="object-fit:contain">`).join('')}</div><div style="display:flex;justify-content:space-between;font-size:.88rem;color:var(--muted)"><span>${CT.fmtDate(o.createdAt)}</span><b style="color:var(--ink)">${CT.inr(o.total)}</b></div></a>`;
+  const views={
+    async overview(){const [o,w]=await Promise.all([CT.api('/api/account/orders'),CT.api('/api/account/wishlist')]);const act=o.orders.find(x=>!['delivered','cancelled','returned'].includes(x.status));
+      return `<div class="greet"><span class="eyebrow">Welcome back</span><h1 style="font-size:clamp(2.2rem,4vw,3.2rem);margin-top:1rem">${CT.esc(U.name.split(' ')[0])}</h1><p style="margin:.6rem 0 0">Your orders, saved teas and addresses, all in one place.</p></div>
+      <div class="stats"><div class="stat"><b>${o.orders.length}</b>Orders</div><div class="stat"><b>${w.ids.length}</b>Wishlist</div><div class="stat"><b>${CT.inr(o.orders.filter(x=>x.status!=='cancelled'&&x.paymentStatus!=='failed').reduce((s,x)=>s+x.total,0))}</b>Spent</div></div>
+      ${act?`<h3 style="margin-bottom:.8rem">Active order</h3><div class="olist">${oc(act)}</div>${CT.progress(act.status)}`:''}
+      <h3 style="margin:1.4rem 0 .8rem">Recent orders</h3><div class="olist">${o.orders.slice(0,3).map(oc).join('')||'<div class="empty"><div class="big"></div><p>No orders yet.</p><a class="btn" href="/shop">Shop now</a></div>'}</div>`},
+    async orders(){const o=await CT.api('/api/account/orders');return `<h2 style="margin-bottom:1.2rem">My orders</h2><div class="olist">${o.orders.map(oc).join('')||'<div class="empty"><div class="big"></div><p>You haven’t ordered yet.</p><a class="btn" href="/shop">Shop now</a></div>'}</div>`},
+    async order(num){const o=(await CT.api('/api/account/orders/'+num)).order;const can=['pending_payment','placed','confirmed'].includes(o.status);
+      return `<a href="#orders" style="font-weight:800">← All orders</a><div class="panel" style="margin-top:1rem"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem"><h3 style="margin:0">Order ${CT.esc(o.number)}</h3><span class="pill ${o.status}">${CT.esc(o.statusLabel)}</span></div><small style="color:var(--muted)">${CT.fmtDate(o.createdAt)} · ${o.paymentMethod==='cod'?'Cash on delivery':'Online payment'} (${CT.esc(o.paymentStatus.replace('_',' '))})</small>
+       ${CT.progress(o.status)}${o.tracking?`<p><b>${CT.esc(o.tracking.courier||'Courier')}</b> · AWB ${CT.esc(o.tracking.awb)} · <a href="${CT.esc(o.tracking.url)}" target="_blank" rel="noopener"><b>Track shipment ↗</b></a></p>`:''}
+       ${o.items.map(i=>`<div class="line" style="grid-template-columns:64px 1fr auto;box-shadow:none"><div class="th" style="width:64px;height:64px"><img src="${CT.esc(i.image)}" alt=""></div><div><b>${CT.esc(i.name)}</b><br><small>${CT.inr(i.price)} × ${i.qty}</small></div><b>${CT.inr(i.price*i.qty)}</b></div>`).join('')}
+       <div style="margin-top:.8rem">${[['Subtotal',o.subtotal],['Offer',-o.offerDiscount],['Coupon '+(o.couponCode||''),-o.discount],['Online discount',-o.prepaidDiscount],['Delivery',o.shipping],['COD fee',o.codFee]].filter(x=>x[1]).map(x=>`<div style="display:flex;justify-content:space-between"><span>${CT.esc(x[0])}</span><span>${x[1]<0?'− ':''}${CT.inr(Math.abs(x[1]))}</span></div>`).join('')}<div style="display:flex;justify-content:space-between;font-family:var(--font-d);font-size:1.5rem;font-weight:500;border-top:1px solid var(--hair);margin-top:.6rem;padding-top:.7rem"><span>Total</span><span>${CT.inr(o.total)}</span></div></div></div>
+       <div class="panel"><h3>Delivery address</h3><p style="margin:0">${CT.esc(o.address.name)}<br>${CT.esc(o.address.line1)}${o.address.line2?', '+CT.esc(o.address.line2):''}<br>${CT.esc(o.address.city)}, ${CT.esc(o.address.state)} ${CT.esc(o.address.pincode)}<br>${CT.esc(o.address.phone)}</p></div>
+       <div class="panel"><h3>Timeline</h3><ul class="tl">${o.timeline.slice().reverse().map((t,i)=>`<li class="${i===0?'cur':''}"><b>${CT.esc(t.label)}</b>${t.note?'<br>'+CT.esc(t.note):''}<br><small>${CT.fmtDate(t.at)}</small></li>`).join('')}</ul></div>
+       <div style="display:flex;gap:.6rem;flex-wrap:wrap"><button class="btn dark" id="again">Order again</button>${can?'<button class="btn ghost" id="cancel">Cancel order</button>':''}<a class="btn ghost" target="_blank" rel="noopener" href="https://wa.me/${CT.esc(CT.cfg.settings.store.whatsapp)}?text=${encodeURIComponent('Hi, help with order '+o.number)}">Need help?</a></div>`},
+    async wishlist(){const w=await CT.api('/api/account/wishlist');return `<h2 style="margin-bottom:1.2rem">Wishlist</h2>${w.products.length?`<div class="grid">${w.products.map(CT.card).join('')}</div>`:'<div class="empty"><div class="big"></div><p>Tap the heart on any tea to save it here.</p><a class="btn" href="/shop">Browse teas</a></div>'}`},
+    async addresses(){addrs=(await CT.api('/api/account/addresses')).addresses;return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem"><h2>Addresses</h2><button class="btn sm" id="newa">+ Add address</button></div><div class="olist">${addrs.map(a=>`<div class="acard"><b>${CT.esc(a.name)}</b> · ${CT.esc(a.label)} ${a.isDefault?'<span class="pill paid">Default</span>':''}<br>${CT.esc(a.line1)}${a.line2?', '+CT.esc(a.line2):''}<br>${CT.esc(a.city)}, ${CT.esc(a.state)} ${CT.esc(a.pincode)}<br>${CT.esc(a.phone)}<div style="margin-top:.6rem;display:flex;gap:.5rem"><button class="btn sm ghost" data-ea="${a.id}">Edit</button><button class="btn sm ghost" data-da="${a.id}">Delete</button></div></div>`).join('')||'<div class="empty"><div class="big"></div><p>No saved addresses yet.</p></div>'}</div>`},
+    async profile(){return `<h2 style="margin-bottom:1.2rem">Profile</h2><div class="panel"><div class="fg"><label class="lb">Email</label><input class="in" value="${CT.esc(U.email)}" disabled></div><div class="fg"><label class="lb" for="pn">Name</label><input class="in" id="pn" value="${CT.esc(U.name)}"></div><div class="fg"><label class="lb" for="pp">Mobile</label><input class="in" id="pp" value="${CT.esc(U.phone||'')}" inputmode="numeric" maxlength="10"></div><div class="err" id="pe"></div><button class="btn" id="ps">Save profile</button></div>
+      <div class="panel"><h3>Change password</h3><div class="fg"><label class="lb" for="cp">Current password</label><input class="in" id="cp" type="password" autocomplete="current-password"></div><div class="fg"><label class="lb" for="np">New password</label><input class="in" id="np" type="password" autocomplete="new-password"></div><div class="err" id="ce"></div><button class="btn dark" id="cs">Update password</button></div>`}
+  };
+  const addrForm=(a={})=>{const g=k=>CT.esc(a[k]||'');return `<div class="row2"><div class="fg"><label class="lb">Full name</label><input class="in" id="a_name" value="${g('name')||CT.esc(U.name)}"></div><div class="fg"><label class="lb">Mobile</label><input class="in" id="a_phone" value="${g('phone')||CT.esc(U.phone||'')}" inputmode="numeric" maxlength="10"></div></div><div class="fg"><label class="lb">Address</label><input class="in" id="a_line1" value="${g('line1')}"></div><div class="fg"><label class="lb">Landmark (optional)</label><input class="in" id="a_line2" value="${g('line2')}"></div><div class="row2"><div class="fg"><label class="lb">Pincode</label><input class="in" id="a_pincode" value="${g('pincode')}" inputmode="numeric" maxlength="6"></div><div class="fg"><label class="lb">City</label><input class="in" id="a_city" value="${g('city')}"></div></div><div class="fg"><label class="lb">State</label><select class="in" id="a_state">${CT.stateOpts(a.state)}</select></div><div class="fg"><label class="lb">Label</label><input class="in" id="a_label" value="${g('label')||'Home'}"></div><label style="display:flex;gap:.5rem;font-weight:700;margin-bottom:.8rem"><input type="checkbox" id="a_def" ${a.isDefault?'checked':''}> Make default</label><div class="err" id="a_err"></div><button class="btn block" id="a_save">Save address</button>`};
+  const openAddr=a=>{const sh=CT.sheet(a?'Edit address':'New address',addrForm(a||{}));$('#a_save',sh).onclick=async()=>{const b={name:$('#a_name').value,phone:$('#a_phone').value,line1:$('#a_line1').value,line2:$('#a_line2').value,pincode:$('#a_pincode').value,city:$('#a_city').value,state:$('#a_state').value,label:$('#a_label').value,isDefault:$('#a_def').checked};
+    try{await CT.api(a?'/api/account/addresses/'+a.id:'/api/account/addresses',{method:a?'PUT':'POST',body:b});sh.close();CT.toast('Address saved');render()}catch(e){$('#a_err').textContent=e.message}}};
+  async function render(){nav();const r=route().split('/');const name=r[0];$('#view').innerHTML='<div class="skeleton"></div>';
+    try{$('#view').innerHTML=await (views[name]||views.overview)(r[1]);}catch(e){$('#view').innerHTML=`<div class="empty"><p>${CT.esc(e.message)}</p></div>`;return}
+    CT.reveal();window.scrollTo({top:0});
+    $('#newa')&&($('#newa').onclick=()=>openAddr());
+    $$('[data-ea]').forEach(b=>b.onclick=()=>openAddr(addrs.find(a=>a.id==b.dataset.ea)));
+    $$('[data-da]').forEach(b=>b.onclick=async()=>{if(confirm('Delete this address?')){await CT.api('/api/account/addresses/'+b.dataset.da,{method:'DELETE'});render()}});
+    $('#ps')&&($('#ps').onclick=async()=>{try{const r=await CT.api('/api/account/profile',{method:'PUT',body:{name:$('#pn').value,phone:$('#pp').value}});Object.assign(U,r.user);CT.toast('Profile saved')}catch(e){$('#pe').textContent=e.message}});
+    $('#cs')&&($('#cs').onclick=async()=>{try{await CT.api('/api/auth/password',{body:{current:$('#cp').value,password:$('#np').value}});$('#cp').value=$('#np').value='';$('#ce').textContent='';CT.toast('Password updated')}catch(e){$('#ce').textContent=e.message}});
+    $('#cancel')&&($('#cancel').onclick=async()=>{if(confirm('Cancel this order?')){try{await CT.api('/api/account/orders/'+r[1]+'/cancel',{body:{}});CT.toast('Order cancelled');render()}catch(e){CT.toast(e.message,{bad:1})}}});
+    $('#again')&&($('#again').onclick=async()=>{const o=(await CT.api('/api/account/orders/'+r[1])).order;o.items.forEach(i=>CT.addToCart(i.id,i.qty));location.href='/cart'});
+  }
+  window.addEventListener('hashchange',()=>{render();$$('.tabbar a').forEach(a=>{const h=a.getAttribute('href');if(h.startsWith('/account'))a.classList.toggle('on',h.includes('#wishlist')===(location.hash==='#wishlist'))})});
+  render();
+});
+
+</script>
+</body></html>

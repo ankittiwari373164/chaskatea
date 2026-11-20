@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Your cart — ChaskaTea</title><meta name="description" content="ChaskaTea — premium natural Assam tea. Free delivery, cash on delivery, prepaid savings.">
+<meta name="theme-color" content="#2e1f7a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="ChaskaTea">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/img/icon-192.png"><link rel="apple-touch-icon" href="/img/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,0..100;1,9..144,400..700,0..100&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css?v=3"><link rel="stylesheet" href="/css/bold.css?v=5"><link rel="stylesheet" href="/css/theme.css?v=11">
+</head><body class="">
+<div id="chrome-top"></div>
+<main id="main">
+
+<div class="wrap"><div class="page-head"><h1 style="font-size:clamp(2rem,5vw,3.4rem)">Your cart</h1></div>
+<div id="cart"><div class="skeleton"></div></div></div>
+<div class="wrap"><section id="rec" style="display:none;padding:1rem 0 3rem"><h2 style="font-size:1.8rem;margin-bottom:1rem">Complete your order</h2><div class="grid hscroll" id="recg"></div></section></div>
+
+</main>
+<div id="chrome-foot"></div>
+<script src="/js/app.js?v=6"></script><script src="/js/fx.js?v=5" defer></script>
+<script>
+
+CT.ready(async()=>{
+  const $=CT.$; let coupon=CT.ls.get('ct_coupon','');
+  const render=async()=>{
+    if(!CT.cart.length){$('#cart').innerHTML='<div class="empty"><div class="big"></div><h3>Your cart is empty</h3><p>Discover our blends and fill it with something special.</p><a class="btn" href="/shop">Explore the collection</a></div>';return}
+    const q=await CT.api('/api/cart/quote',{body:{items:CT.cart,coupon,paymentMethod:'cod'}});
+    // drop unavailable
+    if(q.lines.length!==CT.cart.length){CT.cart=CT.cart.filter(i=>q.lines.some(l=>l.id===i.id));CT.ls.set('ct_cart',CT.cart)}
+    if(q.couponError){CT.ls.set('ct_coupon','');}
+    const cm=q.couponError?`<div class="cmsg bad">${CT.esc(q.couponError)}</div>`:(q.coupon?`<div class="cmsg ok">“${CT.esc(q.coupon.code)}” applied — you save ${CT.inr(q.coupon.amount)} </div>`:'<div class="cmsg"></div>');
+    const online=CT.cfg.settings.payments.razorpay.enabled&&CT.cfg.settings.payments.prepaidDiscount;
+    const ppSave=q.lines.reduce((s,l)=>s+l.prepaid*l.qty,0);
+    $('#cart').innerHTML=`<div class="cartwrap"><div>${q.lines.map(l=>`<div class="line"><a class="th" href="/product?s=${CT.esc(l.slug)}"><img src="${CT.esc(l.image)}" alt=""></a><div><h4>${CT.esc(l.name)}</h4><div class="price"><b>${CT.inr(l.price)}</b>${l.mrp>l.price?`<s>${CT.inr(l.mrp)}</s>`:''}</div><button class="rm" data-rm="${l.id}">Remove</button></div>
+      <div class="lt"><div class="qty"><button data-d="-1" data-id="${l.id}" aria-label="Less">−</button><span>${l.qty}</span><button data-d="1" data-id="${l.id}" aria-label="More">+</button></div><b style="font-family:var(--font-d);font-size:1.2rem">${CT.inr(l.price*l.qty)}</b></div></div>`).join('')}
+     ${q.errors.map(e=>`<p class="cmsg bad">${CT.esc(e)}</p>`).join('')}</div>
+     <aside class="sum"><h3>Order summary</h3>
+      <div class="coupon"><input class="in" id="cc" placeholder="Coupon code" value="${CT.esc(q.coupon?q.coupon.code:coupon)}" autocapitalize="characters"><button class="btn sm dark" id="ca">${q.coupon?'Change':'Apply'}</button></div>${cm}
+      <div class="avail" id="av"></div>
+      <div class="r"><span>Subtotal (${q.lines.reduce((s,l)=>s+l.qty,0)} items)</span><span>${CT.inr(q.subtotal)}</span></div>
+      ${q.mrpTotal>q.subtotal?`<div class="r g"><span>Discount on MRP</span><span>− ${CT.inr(q.mrpTotal-q.subtotal)}</span></div>`:''}
+      ${q.offerDiscount?`<div class="r g"><span>Offer</span><span>− ${CT.inr(q.offerDiscount)}</span></div>`:''}
+      ${q.discount?`<div class="r g"><span>Coupon</span><span>− ${CT.inr(q.discount)}</span></div>`:''}
+      <div class="r"><span>Delivery</span><span>${q.shipping?CT.inr(q.shipping):'<b style="color:var(--ok)">FREE</b>'}</span></div>
+      <div class="r t"><span>Total</span><span>${CT.inr(q.total)}</span></div>
+      ${online&&ppSave?`<p style="border:1px solid var(--gold);background:rgba(111,163,36,.08);padding:.8rem 1rem;font-weight:500;font-size:.82rem;margin-top:1rem;color:var(--gold-d)">Pay online at checkout and save ${CT.inr(ppSave)} more</p>`:''}
+      <a class="btn block" href="/checkout" style="margin-top:1rem">Checkout →</a><a href="/shop" style="display:block;text-align:center;margin-top:.8rem;font-weight:700;font-size:.9rem">Continue shopping</a></aside></div>`;
+  };
+  document.addEventListener('click',async e=>{
+    const d=e.target.closest('[data-d]');if(d){const it=CT.cart.find(i=>i.id==d.dataset.id);CT.setQty(it.id,it.qty+Number(d.dataset.d));render();return}
+    const rm=e.target.closest('[data-rm]');if(rm){CT.setQty(Number(rm.dataset.rm),0);render();return}
+    if(e.target.id==='ca'){coupon=CT.$('#cc').value.trim();CT.ls.set('ct_coupon',coupon);await render()}
+  });
+  await render();
+  const all=(await CT.api('/api/products?featured=1')).products.filter(p=>!CT.cart.some(i=>i.id===p.id)).slice(0,4);
+  if(all.length&&CT.cart.length){$('#rec').style.display='block';$('#recg').innerHTML=all.map(CT.card).join('')}
+});
+
+</script>
+</body></html>

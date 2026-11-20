@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Contact — ChaskaTea</title><meta name="description" content="ChaskaTea — premium natural Assam tea. Free delivery, cash on delivery, prepaid savings.">
+<meta name="theme-color" content="#2e1f7a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="ChaskaTea">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/img/icon-192.png"><link rel="apple-touch-icon" href="/img/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,0..100;1,9..144,400..700,0..100&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css?v=3"><link rel="stylesheet" href="/css/bold.css?v=5"><link rel="stylesheet" href="/css/theme.css?v=11">
+</head><body class="">
+<div id="chrome-top"></div>
+<main id="main">
+
+<div class="wrap"><div class="page-head"><span class="eyebrow">Say hello</span><h1 style="margin-top:.6rem">Contact us</h1><p style="color:var(--muted);margin-top:.6rem">Orders, bulk enquiries, hotel &amp; restaurant supply — we reply quickly.</p></div>
+<div class="about-grid" style="align-items:start;padding-bottom:4rem"><div id="info" class="prose"></div>
+<form class="panel" id="f"><h3>Send a message</h3><div class="row2"><div class="fg"><label class="lb" for="name">Name</label><input class="in" id="name" required></div><div class="fg"><label class="lb" for="phone">Mobile</label><input class="in" id="phone" inputmode="numeric" maxlength="10"></div></div><div class="fg"><label class="lb" for="email">Email</label><input class="in" id="email" type="email"></div><div class="fg"><label class="lb" for="message">Message</label><textarea class="in" id="message" required></textarea></div><div class="err" id="e"></div><button class="btn block" id="sub">Send message</button></form></div></div>
+</main>
+<div id="chrome-foot"></div>
+<script src="/js/app.js?v=6"></script><script src="/js/fx.js?v=5" defer></script>
+<script>
+
+CT.ready(()=>{const $=CT.$,s=CT.cfg.settings.store;
+ $('#info').innerHTML=`<div class="panel"><b>Phone</b><br><a href="tel:${CT.esc(s.phone.replace(/\s/g,''))}">${CT.esc(s.phone)}</a></div><div class="panel"><b>WhatsApp</b><br><a target="_blank" rel="noopener" href="https://wa.me/${CT.esc(s.whatsapp)}">Chat with us</a></div><div class="panel"><b>Email</b><br><a href="mailto:${CT.esc(s.email)}">${CT.esc(s.email)}</a></div><div class="panel"><b>Based in</b><br>${CT.esc(s.address)}</div>`;
+ $('#f').onsubmit=async e=>{e.preventDefault();const b=$('#sub');b.disabled=true;$('#e').textContent='';try{await CT.api('/api/contact',{body:{name:$('#name').value,phone:$('#phone').value,email:$('#email').value,message:$('#message').value}});$('#f').innerHTML='<div class="empty" style="border:0"><div class="big"></div><h3>Message sent!</h3><p>Thanks — we’ll get back to you shortly.</p></div>'}catch(er){$('#e').textContent=er.message;b.disabled=false}}});
+</script>
+</body></html>
