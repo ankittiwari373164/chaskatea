@@ -7,7 +7,7 @@
 <link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/img/icon-192.png"><link rel="apple-touch-icon" href="/img/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,0..100;1,9..144,400..700,0..100&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/styles.css?v=3"><link rel="stylesheet" href="/css/bold.css?v=5"><link rel="stylesheet" href="/css/theme.css?v=11">
+<link rel="stylesheet" href="/css/styles.css?v=3"><link rel="stylesheet" href="/css/bold.css?v=5"><link rel="stylesheet" href="/css/theme.css?v=15">
 </head><body class="">
 <div id="chrome-top"></div>
 <main id="main">
@@ -21,11 +21,8 @@
   <div class="cta rv d3"><a class="btn" href="/shop">Shop the collection</a><a class="btn ghost" href="#range">Discover our blends</a></div>
   <div class="trust rv d3"><span><i></i>Free delivery</span><span><i></i>Cash on delivery</span><span><i></i>100% natural</span></div>
  </div>
- <div class="hero-packs" aria-hidden="true">
-  <img class="pa" src="/img/chta1.6.webp" alt="" width="480" height="480">
-  <img class="pb" src="/img/tea-1xp-1kg.webp" alt="" width="520" height="520">
- </div>
-</div><div class="stamp" aria-hidden="true"><svg viewBox="0 0 130 130"><defs><path id="cp" d="M65,65 m-50,0 a50,50 0 1,1 100,0 a50,50 0 1,1 -100,0"/></defs><text><textPath href="#cp">Taste of Happiness · 100% Natural · </textPath></text></svg><b>Assam</b></div></section><svg class="wave" viewBox="0 0 1440 46" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0h1440v14c-120 22-240 32-360 16S840 0 720 14 480 46 360 34 120 0 0 14z"/></svg>
+ <div class="hero-visual"><img src="/img/supreme-dust-branding.webp" alt="ChaskaTea Supreme Dust — natural and full of khushboo" width="1000" height="1000" fetchpriority="high"><span class="hv-tag"><b>₹30 off</b> on prepaid orders</span></div>
+</div></section><svg class="wave" viewBox="0 0 1440 46" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0h1440v14c-120 22-240 32-360 16S840 0 720 14 480 46 360 34 120 0 0 14z"/></svg>
 <div class="marquee" aria-hidden="true"><div class="mq"><span>Taste of Happiness</span><span>Single-origin Assam CTC</span><span>Free delivery across India</span><span>Cash on delivery</span><span>Extra savings on prepaid orders</span><span>Packed fresh every week</span><span>Taste of Happiness</span><span>Single-origin Assam CTC</span><span>Free delivery across India</span><span>Cash on delivery</span><span>Extra savings on prepaid orders</span><span>Packed fresh every week</span></div></div>
 <section class="s" id="bestsellers"><div class="wrap">
  <div class="sec-head rv"><div><span class="eyebrow">Most loved</span><h2>Our <em>bestsellers</em></h2></div><a class="btn ghost sm" href="/shop">Shop all</a></div>
@@ -41,9 +38,34 @@
 </div></div></section>
 <section class="s" id="offers" style="padding-bottom:0"><div class="wrap"><div class="banners" id="banners"></div></div></section>
 
-<section class="s" id="range"><div class="wrap">
- <div class="sec-head rv"><div><span class="eyebrow">The collection</span><h2>Choose your blend</h2><p>Three signature blends in every pack size, and curated combinations for the indecisive.</p></div><a class="btn ghost sm" href="/shop">View all</a></div>
- <div class="cats hscroll" id="cats"></div>
+<div id="range"></div>
+<section class="range r-classic" id="range-classic"><div class="wrap">
+ <div class="range-top">
+  <div class="range-img"><img src="/img/classic-branding-pic.webp" alt="ChaskaTea Classic" loading="lazy" width="1000" height="1000"></div>
+  <div class="range-copy"><span class="eyebrow">The Classic range</span><h2>Classic</h2><p class="range-tag">Kadak chai, zindagi jaise.</p><p>Our everyday strong and bold CTC. Rich aroma, deep colour and the kadak taste that makes the morning cup worth waking up for.</p><ul class="range-pts"><li>Rich aroma</li><li>Strong taste</li><li>Perfect every time</li></ul><a class="btn" href="/shop?cat=classic">Shop Classic</a></div>
+ </div>
+ <div class="range-row" data-cat="classic"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+</div></section>
+<section class="range r-premium flip" id="range-premium"><div class="wrap">
+ <div class="range-top">
+  <div class="range-img"><img src="/img/premium-1.webp" alt="ChaskaTea Premium" loading="lazy" width="1000" height="1000"></div>
+  <div class="range-copy"><span class="eyebrow">The Premium range</span><h2>Premium</h2><p class="range-tag">Made for true tea lovers.</p><p>A finer blend of select Assam leaf with a smooth, full-bodied cup. Brilliant as masala chai with ginger, cardamom and elaichi.</p><ul class="range-pts"><li>Select Assam leaf</li><li>Smooth & full-bodied</li><li>Best for masala chai</li></ul><a class="btn" href="/shop?cat=premium">Shop Premium</a></div>
+ </div>
+ <div class="range-row" data-cat="premium"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+</div></section>
+<section class="range r-supreme" id="range-supreme"><div class="wrap">
+ <div class="range-top">
+  <div class="range-img"><img src="/img/s9-branding-pic.webp" alt="ChaskaTea Supreme" loading="lazy" width="1000" height="1000"></div>
+  <div class="range-copy"><span class="eyebrow">The Supreme range</span><h2>Supreme</h2><p class="range-tag">Natural kadak, for home and restaurants.</p><p>S9, S8 and Supreme Dust: our strongest teas with golden colour and big strength, loved by tea stalls, restaurants and big families.</p><ul class="range-pts"><li>Golden colour</li><li>Extra strength</li><li>Restaurant favourite</li></ul><a class="btn" href="/shop?cat=supreme">Shop Supreme</a></div>
+ </div>
+ <div class="range-row" data-cat="supreme"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+</div></section>
+<section class="range r-combo flip" id="range-combo"><div class="wrap">
+ <div class="range-top">
+  <div class="range-img"><img src="/img/e624bd44-6523-43e5-b9a0-26437aad7843.webp" alt="ChaskaTea Combos" loading="lazy" width="1000" height="1000"></div>
+  <div class="range-copy"><span class="eyebrow">The Combos range</span><h2>Combos</h2><p class="range-tag">Classic + Premium, together for less.</p><p>Can’t decide? Get both blends in one order and save up to 61%. The easiest way to find your family’s favourite cup.</p><ul class="range-pts"><li>Save up to 61%</li><li>Two blends, one box</li><li>Free delivery</li></ul><a class="btn" href="/shop?cat=combo">Shop Combos</a></div>
+ </div>
+ <div class="range-row" data-cat="combo"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
 </div></section>
 
 
@@ -55,6 +77,11 @@
   <a class="mood rv d2" href="/shop"><img src="/img/couple-picnic-sitting-drinking-tea-232070-5353.webp" alt="" loading="lazy"><div><h3>Family time</h3><p>Big packs for the whole house.</p><span class="go">Shop now →</span></div></a>
   <a class="mood rv d3" href="/shop"><img src="/img/premium-b-randing-pic.webp" alt="" loading="lazy"><div><h3>Gifting</h3><p>Premium packs worth sharing.</p><span class="go">Shop now →</span></div></a>
  </div>
+</div></section>
+<section class="s brandvid"><div class="wrap">
+ <div class="sec-head center" style="justify-content:center"><div><span class="eyebrow">Our story in a minute</span><h2>Taste of <em>Happiness</em></h2></div></div>
+ <div class="vid"><video id="bv" src="/video/chaskatea-brand.mp4" poster="/video/brand-poster.jpg" autoplay muted loop playsinline preload="metadata"></video>
+  <button class="vid-btn" id="bvb" aria-label="Pause video"><svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg></button></div>
 </div></section>
 <section class="slab"><div class="wrap">
  <div class="rv"><span class="eyebrow" style="color:var(--gold-l)">The online privilege</span><h2 style="margin-top:1.2rem">An exclusive saving on <em>every pack</em>, when you pay online.</h2><p style="opacity:.8;margin-top:1.4rem;max-width:30em;font-weight:300">No code and no minimum. Choose online payment at checkout and the saving is applied automatically, pack by pack. Prefer cash? Cash on delivery is always available.</p><a class="btn" href="/shop" style="margin-top:1rem">Begin shopping</a></div>
@@ -114,8 +141,10 @@ CT.ready(async()=>{
   $('#banners').innerHTML=c.banners.map(b=>`<a class="banner th-${CT.esc(b.theme)} rv" href="${CT.esc(b.link)}"><div><h3>${CT.esc(CT.clean(b.title))}</h3><p>${CT.esc(CT.clean(b.subtitle))}</p></div><span class="arrow">${CT.esc(b.cta||'Shop now')}</span></a>`).join('');
   if(!c.banners.length)$('#offers').remove();
   const first={};const all=(await CT.api('/api/products')).products;all.forEach(p=>{first[p.category]=first[p.category]||p});
-  $('#cats').innerHTML=c.categories.map((k,i)=>`<a class="cat rv d${i%3}" href="/shop?cat=${CT.esc(k.slug)}"><div><h3>${CT.esc(k.name)}</h3><p>${CT.esc(k.blurb)}</p></div>${first[k.slug]?`<img src="${CT.esc(first[k.slug].images[0])}" alt="" loading="lazy">`:''}<span class="go">Explore</span></a>`).join('');
-  const feat=all.filter(p=>p.featured).slice(0,8);
+  if($('#cats'))$('#cats').innerHTML=c.categories.map((k,i)=>`<a class="cat rv d${i%3}" href="/shop?cat=${CT.esc(k.slug)}"><div><h3>${CT.esc(k.name)}</h3><p>${CT.esc(k.blurb)}</p></div>${first[k.slug]?`<img src="${CT.esc(first[k.slug].images[0])}" alt="" loading="lazy">`:''}<span class="go">Explore</span></a>`).join('');
+  CT.$$('.range-row').forEach(r=>{const l=all.filter(p=>p.category===r.dataset.cat);r.innerHTML=l.map(CT.card).join('')||'<p>Coming soon.</p>'});
+  const bv=$('#bv'),bb=$('#bvb');if(bv&&bb){bb.onclick=()=>{if(bv.paused){bv.play();bb.innerHTML='<svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg>';bb.setAttribute('aria-label','Pause video')}else{bv.pause();bb.innerHTML='<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg>';bb.setAttribute('aria-label','Play video')}}}
+  const feat=all.filter(p=>p.featured).slice(0,4);
   $('#featured').innerHTML=feat.map(CT.card).join('');
   $('#reviews').innerHTML=c.reviews.map(r=>`<blockquote><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p>&ldquo;${CT.esc(r.text)}&rdquo;</p><cite>${CT.esc(r.name)} &middot; ${CT.esc(r.source)}</cite></blockquote>`).join('');
   $('#wa').href='https://wa.me/'+c.settings.store.whatsapp+'?text='+encodeURIComponent('Hello ChaskaTea, I would like help choosing a tea.');
