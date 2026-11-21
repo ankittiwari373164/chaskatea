@@ -6,41 +6,177 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "functions": {
-    "api/index.js": { "maxDuration": 30, "includeFiles": "{lib/**,public/blog/posts.json}" }
+    "api/index.js": {
+      "maxDuration": 30,
+      "includeFiles": "{lib/**,public/blog/posts.json}"
+    }
   },
   "redirects": [
-    { "source": "/:path*", "has": [{ "type": "host", "value": "chaskatea.com" }], "destination": "https://www.chaskatea.com/:path*", "permanent": true },
-    { "source": "/product", "has": [{ "type": "query", "key": "s", "value": "(?<slug>[a-z0-9-]+)" }], "destination": "/products/:slug", "permanent": true },
-    { "source": "/index", "destination": "/", "permanent": true },
-    { "source": "/home", "destination": "/", "permanent": true },
-    { "source": "/products", "destination": "/shop", "permanent": true },
-    { "source": "/collections/:path*", "destination": "/shop", "permanent": true },
-    { "source": "/product-category/:path*", "destination": "/shop", "permanent": true },
-    { "source": "/about-us", "destination": "/about", "permanent": true },
-    { "source": "/contact-us", "destination": "/contact", "permanent": true },
-    { "source": "/shop/:path*", "destination": "/shop", "permanent": true }
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "chaskatea.com"
+        }
+      ],
+      "destination": "https://www.chaskatea.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/product",
+      "has": [
+        {
+          "type": "query",
+          "key": "s",
+          "value": "(?<slug>[a-z0-9-]+)"
+        }
+      ],
+      "destination": "/products/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/index",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/home",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/products",
+      "destination": "/shop",
+      "permanent": true
+    },
+    {
+      "source": "/collections/:path*",
+      "destination": "/shop",
+      "permanent": true
+    },
+    {
+      "source": "/product-category/:path*",
+      "destination": "/shop",
+      "permanent": true
+    },
+    {
+      "source": "/about-us",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/contact-us",
+      "destination": "/contact",
+      "permanent": true
+    }
   ],
   "rewrites": [
-    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
-    { "source": "/api/:path*", "destination": "/api/index" },
-    { "source": "/uploads/:key", "destination": "/api/index" },
-    { "source": "/products/:slug", "destination": "/product.html" },
-    { "source": "/account", "destination": "/account/index.html" },
-    { "source": "/admin", "destination": "/admin/index.html" },
-    { "source": "/shipping-returns", "destination": "/policy.html" },
-    { "source": "/privacy", "destination": "/policy.html" },
-    { "source": "/terms", "destination": "/policy.html" }
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/uploads/:key",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/products/:slug",
+      "destination": "/product"
+    },
+    {
+      "source": "/account",
+      "destination": "/account/index.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/shipping-returns",
+      "destination": "/policy.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/policy.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/policy.html"
+    }
   ],
   "headers": [
-    { "source": "/img/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000, stale-while-revalidate=86400" }] },
-    { "source": "/video/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }] },
-    { "source": "/css/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
-    { "source": "/js/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
-    { "source": "/(.*)", "has": [{ "type": "host", "value": "chaskatea.vercel.app" }], "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] },
-    { "source": "/(.*)", "headers": [
-      { "key": "X-Content-Type-Options", "value": "nosniff" },
-      { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-      { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
-    ] }
+    {
+      "source": "/img/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/video/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000"
+        }
+      ]
+    },
+    {
+      "source": "/css/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/js/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "chaskatea.vercel.app"
+        }
+      ],
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
   ]
 }
