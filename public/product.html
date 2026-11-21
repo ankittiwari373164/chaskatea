@@ -12,7 +12,7 @@
 <link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/img/icon-192.png"><link rel="apple-touch-icon" href="/img/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/styles.css?v=3"><link rel="stylesheet" href="/css/bold.css?v=5"><link rel="stylesheet" href="/css/theme.css?v=18">
+<link rel="stylesheet" href="/css/styles.css?v=3"><link rel="stylesheet" href="/css/bold.css?v=5"><link rel="stylesheet" href="/css/theme.css?v=19">
 <script src="/js/track.js?v=16"></script>
 </head><body class="">
 <div id="chrome-top"></div>
@@ -71,13 +71,16 @@ CT.ready(async()=>{
     <button class="ibtn wl ${CT.wish.has(p.id)?'on':''}" data-id="${p.id}" aria-label="Wishlist" style="width:48px;height:48px"><svg viewBox="0 0 24 24" style="stroke:var(--ink);fill:${CT.wish.has(p.id)?'var(--gold-d)':'none'}"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 018-2.7A4.5 4.5 0 0120 10c0 5.800-8 11-8 11z"/></svg></button></div>
    ${p.stock>0&&p.stock<=10?`<p style="color:var(--terracotta);font-weight:800">Only ${p.stock} remaining</p>`:''}
    <div class="specs"><div><span>Strength</span><i class="meter">${[1,2,3,4,5].map(n=>`<em class="${n<=inf.str?'on':''}"></em>`).join('')}</i></div><div><span>Taste</span><b>${CT.esc(inf.notes)}</b></div><div><span>Best for</span><b>${CT.esc(inf.best)}</b></div><div><span>Makes approx.</span><b>${cups} cups</b></div></div>
+  </div></div>
+  <section class="pdp-details"><div class="pdd-side"><h2>Why you'll love it</h2>
    <ul class="hl-list">${p.highlights.map(h=>`<li>${CT.esc(h)}</li>`).join('')}</ul>
    <div class="perks"><div>Free delivery</div><div>₹ Cash on delivery</div><div>100% natural</div><div>Packed in 7 days</div></div>
+  </div><div class="pdd-main">
    <details class="acc" open><summary>About this tea</summary><div class="in2">${CT.esc(p.description)}</div></details>
    <details class="acc"><summary>How to brew the perfect cup</summary><div class="in2"><ol class="brew-steps"><li>Boil ½ cup water per cup with crushed ginger or elaichi (optional).</li><li>Add 1 heaped tsp ChaskaTea per cup and boil for 1 minute.</li><li>Add ½ cup milk and sugar to taste, bring to a boil.</li><li>Simmer 2–3 minutes for full colour, strain and enjoy.</li></ol><a href="/blog/how-to-make-masala-chai-at-home">Read our full masala chai recipe →</a></div></details>
    <details class="acc"><summary>Ingredients &amp; storage</summary><div class="in2"><b>Ingredients:</b> 100% natural Assam CTC black tea. No artificial colour, flavour or additives.<br><b>Origin:</b> Assam, India.<br><b>Ideal for:</b> ${CT.esc(inf.use)}.<br><b>Storage:</b> Keep in an airtight container in a cool, dry place away from strong smells.</div></details>
    <details class="acc"><summary>Delivery, COD &amp; returns</summary><div class="in2">Free delivery across India, usually in 3–7 days. Cash on delivery available. Secure online payment by Razorpay (UPI, cards, netbanking) with upto ₹30 off. Damaged or wrong item? Message us within 48 hours and we’ll make it right.</div></details>
-  </div></div>
+  </div></section>
   <section class="pdp-extra">
    <div class="benefits">${[['leaf','100% natural','No artificial colour, flavour or additives.'],['cup','Rich aroma','Carefully selected Assam leaf for a fragrant cup.'],['bolt','Strong taste','Bold CTC that stands up to milk and spices.'],['box','Packed fresh','Sealed fresh every week to lock in flavour.']].map(([k,t,d])=>`<div class="bn"><i class="bn-${k}"></i><b>${t}</b><span>${d}</span></div>`).join('')}</div>
    ${CT.cfg.reviews.length?`<div class="pdp-rev"><h2>What chai lovers say</h2><div class="rev">${CT.cfg.reviews.slice(0,3).map(v=>`<blockquote><div class="stars">★★★★★</div><p>“${CT.esc(v.text)}”</p><cite>${CT.esc(v.name)}</cite></blockquote>`).join('')}</div></div>`:''}

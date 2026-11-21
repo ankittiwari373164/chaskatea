@@ -713,3 +713,11 @@ body{background-color:var(--bg)!important;
 .reviews2 cite,.pdp-rev cite{letter-spacing:.02em!important;text-transform:none!important;font-size:.85rem!important}
 @media(max-width:900px){.reviews2 .rev,.pdp-rev .rev{grid-auto-columns:82%!important;margin-inline:-16px!important;padding-inline:16px!important}}
 .post-hero img{height:auto!important;aspect-ratio:16/9!important;object-fit:cover!important}
+/* product details moved below the buy area */
+.pdp{align-items:start}
+.gal{position:sticky;top:100px}
+.pdp-details{display:grid;grid-template-columns:1fr 1.5fr;gap:clamp(1.5rem,4vw,3rem);margin-top:clamp(2rem,4vw,3rem);padding-top:clamp(1.5rem,3vw,2.5rem);border-top:1px solid #ece3cf}
+.pdp-details h2{font-size:clamp(1.4rem,2.6vw,1.9rem)!important;color:var(--indigo)!important;margin-bottom:1rem}
+.pdd-side .hl-list{margin-top:0}
+.pdd-main .acc:first-child{border-top:1px solid #e3e8d6}
+@media(max-width:900px){.pdp-details{grid-template-columns:1fr;gap:1rem}.gal{position:static}}
