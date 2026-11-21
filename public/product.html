@@ -1,13 +1,19 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>ChaskaTea</title><meta name="description" content="ChaskaTea — premium natural Assam tea. Free delivery, cash on delivery, prepaid savings.">
-<meta name="theme-color" content="#2e1f7a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="ChaskaTea">
+<title>Assam Tea | ChaskaTea</title>
+<meta name="description" content="Natural Assam CTC tea by ChaskaTea. Free shipping, COD and upto ₹30 off on prepaid orders.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://www.chaskatea.com/shop">
+<meta property="og:site_name" content="ChaskaTea"><meta property="og:locale" content="en_IN"><meta property="og:type" content="website">
+<meta property="og:title" content="Assam Tea | ChaskaTea"><meta property="og:description" content="Natural Assam CTC tea by ChaskaTea. Free shipping, COD and upto ₹30 off on prepaid orders."><meta property="og:url" content="https://www.chaskatea.com/shop"><meta property="og:image" content="https://www.chaskatea.com/img/og-chaskatea.jpg">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Assam Tea | ChaskaTea"><meta name="twitter:description" content="Natural Assam CTC tea by ChaskaTea. Free shipping, COD and upto ₹30 off on prepaid orders."><meta name="twitter:image" content="https://www.chaskatea.com/img/og-chaskatea.jpg">
+<meta name="theme-color" content="#2e1f7a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="ChaskaTea">
 <link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/img/icon-192.png"><link rel="apple-touch-icon" href="/img/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,0..100;1,9..144,400..700,0..100&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/styles.css?v=3"><link rel="stylesheet" href="/css/bold.css?v=5"><link rel="stylesheet" href="/css/theme.css?v=15">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css?v=3"><link rel="stylesheet" href="/css/bold.css?v=5"><link rel="stylesheet" href="/css/theme.css?v=18">
+<script src="/js/track.js?v=16"></script>
 </head><body class="">
 <div id="chrome-top"></div>
 <main id="main">
@@ -19,34 +25,69 @@
 
 </main>
 <div id="chrome-foot"></div>
-<script src="/js/app.js?v=6"></script><script src="/js/fx.js?v=5" defer></script>
+<script src="/js/app.js?v=16"></script><script src="/js/fx.js?v=16" defer></script>
 <script>
 
 CT.ready(async()=>{
-  const $=CT.$, s=new URL(location.href).searchParams.get('s');
+  const $=CT.$, s=(location.pathname.match(/^\/products\/([^/]+)/)||[])[1]||new URL(location.href).searchParams.get('s');
   let r; try{r=await CT.api('/api/products/'+encodeURIComponent(s||'x'))}catch(e){location.replace('/404');return}
-  const p=r.product; document.title=p.name+' — ChaskaTea'; $('#cl').textContent=p.category; $('#cl').href='/shop?cat='+p.category;
+  const p=r.product; CT.pmap[p.id]=p;
+  const INFO={classic:{str:4,best:'Everyday kadak chai at home',notes:'Strong, malty, deep colour',use:'Morning chai, adrak chai, office chai',tag:'Kadak chai, zindagi jaise'},
+    premium:{str:3,best:'Masala & elaichi chai with rich aroma',notes:'Smooth, full-bodied, aromatic',use:'Masala chai, elaichi chai, guests',tag:'Made for true tea lovers'},
+    supreme:{str:5,best:'Tea stalls, restaurants & extra-strong chai',notes:'Very strong, golden colour, fast brewing',use:'Bulk brewing, hotels, kadak lovers',tag:'Natural kadak for home & restaurants'},
+    combo:{str:4,best:'Families who want to try both blends',notes:'Classic strength + Premium aroma',use:'Daily chai and weekend masala chai',tag:'Two blends, one box, more savings'}};
+  const cat=String(p.category).toLowerCase(), inf=INFO[cat]||INFO.classic, grams=p.grams||parseInt(p.weight)||250, cups=Math.round(grams/2.5);
+  const SITE='https://www.chaskatea.com', url=SITE+'/products/'+p.slug, ogImg=SITE+p.images[0];
+  const ttl=`Buy ${p.name.replace(/\s*\|\s*/,' ')} – Assam CTC Tea Online at ₹${p.price}`;
+  const dsc=`${p.short} ${p.weight} pack at ₹${p.price}${p.mrp>p.price?` (MRP ₹${p.mrp})`:''}. Free shipping, cash on delivery and upto ₹30 off on prepaid orders.`;
+  document.title=ttl+' | ChaskaTea';
+  const setM=(sel,attr,val)=>{let m=document.head.querySelector(sel);if(m)m.setAttribute(attr,val)};
+  setM('meta[name=description]','content',dsc);setM('link[rel=canonical]','href',url);setM('meta[property="og:title"]','content',ttl);setM('meta[property="og:description"]','content',dsc);
+  setM('meta[property="og:url"]','content',url);setM('meta[property="og:image"]','content',ogImg);setM('meta[property="og:type"]','content','product');
+  if(location.search.includes('s='))history.replaceState(null,'','/products/'+p.slug);
+  const ldj=document.createElement('script');ldj.type='application/ld+json';ldj.textContent=JSON.stringify({'@context':'https://schema.org','@graph':[
+    {'@type':'Product',name:p.name,image:p.images.map(i=>SITE+i),description:p.description,sku:String(p.id),brand:{'@type':'Brand',name:'ChaskaTea'},category:'Assam CTC Tea',
+     offers:{'@type':'Offer',url,priceCurrency:'INR',price:p.price,availability:p.stock>0?'https://schema.org/InStock':'https://schema.org/OutOfStock',itemCondition:'https://schema.org/NewCondition',
+       shippingDetails:{'@type':'OfferShippingDetails',shippingRate:{'@type':'MonetaryAmount',value:0,currency:'INR'},shippingDestination:{'@type':'DefinedRegion',addressCountry:'IN'}},
+       hasMerchantReturnPolicy:{'@type':'MerchantReturnPolicy',applicableCountry:'IN',returnPolicyCategory:'https://schema.org/MerchantReturnFiniteReturnWindow',merchantReturnDays:2}}},
+    {'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Home',item:SITE+'/'},{'@type':'ListItem',position:2,name:'Shop',item:SITE+'/shop'},{'@type':'ListItem',position:3,name:p.category,item:SITE+'/shop?cat='+cat},{'@type':'ListItem',position:4,name:p.name,item:url}]}]});
+  document.head.appendChild(ldj);
+  try{window.CTtrack&&CTtrack.view(p)}catch(e){} $('#cl').textContent=p.category; $('#cl').href='/shop?cat='+p.category;
   const off=p.mrp>p.price?Math.round((1-p.price/p.mrp)*100):0; let qty=1, img=0;
   const pre=CT.cfg.settings.payments.prepaidDiscount&&p.prepaidDiscount;
-  const sib=r.siblings.length?`<div class="opts"><a class="on">${CT.esc(p.weight)}</a>${r.siblings.map(x=>`<a href="/product?s=${CT.esc(x.slug)}">${CT.esc(x.weight)} · ${CT.inr(x.price)}</a>`).join('')}</div>`:'';
+  const g=x=>x.grams||(/kg/i.test(x.weight)?parseFloat(x.weight)*1000:parseFloat(x.weight))||0;
+  const packs=[p,...r.siblings].sort((a,b)=>g(a)-g(b));
+  const sib=packs.length>1?`<div class="packs"><span class="packs-l">Choose pack size</span><div class="packs-g">${packs.map(x=>`<a class="pk ${x.id===p.id?'on':''}" ${x.id===p.id?'aria-current="true"':`href="/products/${CT.esc(x.slug)}"`}><b>${CT.esc(x.weight)}</b><span>${CT.inr(x.price)}</span>${g(x)?`<small>${CT.inr(Math.round(x.price/g(x)*100))}/100 g</small>`:''}</a>`).join('')}</div></div>`:'';
   const isCut=(src)=>/(tea-1xp|chta1|s9\.|8n-l41|ch-01|supreme-dust-1kg|e624|509a|images)/.test(src)&&!/branding/.test(src);
   $('#pdp').innerHTML=`<div class="pdp"><div class="gal"><div class="main t-${CT.esc(p.category)}" data-pic><img id="mi" class="${isCut(p.images[0])?'cut':''}" src="${CT.esc(p.images[0])}" alt="${CT.esc(p.name)}"></div>
    ${p.images.length>1?`<div class="thumbs">${p.images.map((i,k)=>`<button class="${k?'':'on'}" data-k="${k}" aria-label="Photo ${k+1}"><img class="${isCut(i)?'cut':''}" src="${CT.esc(i)}" alt=""></button>`).join('')}</div>`:''}</div>
-  <div class="info"><span class="eyebrow">${CT.esc(p.category)} tea · ${CT.esc(p.weight)}</span><h1 style="margin:.6rem 0">${CT.esc(p.name)}</h1>
+  <div class="info"><span class="eyebrow">${CT.esc(p.category)} tea · ${CT.esc(p.weight)}</span><h1 class="pdp-title">${CT.esc(p.name)}</h1><p class="pdp-tag">${CT.esc(inf.tag)}</p>
    <div class="price"><b>${CT.inr(p.price)}</b>${p.mrp>p.price?`<s>${CT.inr(p.mrp)}</s><span class="save">${off}% OFF</span>`:''}</div>
    <p style="font-size:.78rem;color:var(--muted);margin:.4rem 0 0;letter-spacing:.02em">Inclusive of all taxes · Free delivery</p>
-   ${pre?`<p style="color:var(--leaf2);font-weight:500;margin:.8rem 0 0;font-size:.9rem">Pay online and save another ₹${p.prepaidDiscount}</p>`:''}
+   ${pre?`<div class="prepaid">Pay online &amp; save <b>₹${p.prepaidDiscount} more</b> · effective price <b>${CT.inr(p.price-p.prepaidDiscount)}</b></div>`:''}
    <p class="lead">${CT.esc(p.short)}</p>${sib}
    <div class="buyrow desk-only"><div class="qty"><button id="m" aria-label="Less">−</button><span id="q">1</span><button id="pl" aria-label="More">+</button></div>
     ${p.stock>0?`<button class="btn" id="add" style="flex:1;min-width:150px">Add to cart</button><a class="btn dark" id="buy" href="/checkout?buy=${p.id}">Buy now</a>`:'<button class="btn" disabled>Sold out</button>'}
     <button class="ibtn wl ${CT.wish.has(p.id)?'on':''}" data-id="${p.id}" aria-label="Wishlist" style="width:48px;height:48px"><svg viewBox="0 0 24 24" style="stroke:var(--ink);fill:${CT.wish.has(p.id)?'var(--gold-d)':'none'}"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 018-2.7A4.5 4.5 0 0120 10c0 5.800-8 11-8 11z"/></svg></button></div>
    ${p.stock>0&&p.stock<=10?`<p style="color:var(--terracotta);font-weight:800">Only ${p.stock} remaining</p>`:''}
+   <div class="specs"><div><span>Strength</span><i class="meter">${[1,2,3,4,5].map(n=>`<em class="${n<=inf.str?'on':''}"></em>`).join('')}</i></div><div><span>Taste</span><b>${CT.esc(inf.notes)}</b></div><div><span>Best for</span><b>${CT.esc(inf.best)}</b></div><div><span>Makes approx.</span><b>${cups} cups</b></div></div>
    <ul class="hl-list">${p.highlights.map(h=>`<li>${CT.esc(h)}</li>`).join('')}</ul>
    <div class="perks"><div>Free delivery</div><div>₹ Cash on delivery</div><div>100% natural</div><div>Packed in 7 days</div></div>
    <details class="acc" open><summary>About this tea</summary><div class="in2">${CT.esc(p.description)}</div></details>
-   <details class="acc"><summary>Brewing guide</summary><div class="in2">Boil 1 cup water, add 1 tsp tea, simmer 2 minutes. Add ½ cup milk and boil once more. Ginger or elaichi go in with the water. Adjust to taste.</div></details>
-   <details class="acc"><summary>Delivery &amp; returns</summary><div class="in2">Free delivery across India, usually in 3–7 days. Cash on delivery available. Damaged or wrong item? Message us within 48 hours and we’ll make it right.</div></details>
-  </div></div>`;
+   <details class="acc"><summary>How to brew the perfect cup</summary><div class="in2"><ol class="brew-steps"><li>Boil ½ cup water per cup with crushed ginger or elaichi (optional).</li><li>Add 1 heaped tsp ChaskaTea per cup and boil for 1 minute.</li><li>Add ½ cup milk and sugar to taste, bring to a boil.</li><li>Simmer 2–3 minutes for full colour, strain and enjoy.</li></ol><a href="/blog/how-to-make-masala-chai-at-home">Read our full masala chai recipe →</a></div></details>
+   <details class="acc"><summary>Ingredients &amp; storage</summary><div class="in2"><b>Ingredients:</b> 100% natural Assam CTC black tea. No artificial colour, flavour or additives.<br><b>Origin:</b> Assam, India.<br><b>Ideal for:</b> ${CT.esc(inf.use)}.<br><b>Storage:</b> Keep in an airtight container in a cool, dry place away from strong smells.</div></details>
+   <details class="acc"><summary>Delivery, COD &amp; returns</summary><div class="in2">Free delivery across India, usually in 3–7 days. Cash on delivery available. Secure online payment by Razorpay (UPI, cards, netbanking) with upto ₹30 off. Damaged or wrong item? Message us within 48 hours and we’ll make it right.</div></details>
+  </div></div>
+  <section class="pdp-extra">
+   <div class="benefits">${[['leaf','100% natural','No artificial colour, flavour or additives.'],['cup','Rich aroma','Carefully selected Assam leaf for a fragrant cup.'],['bolt','Strong taste','Bold CTC that stands up to milk and spices.'],['box','Packed fresh','Sealed fresh every week to lock in flavour.']].map(([k,t,d])=>`<div class="bn"><i class="bn-${k}"></i><b>${t}</b><span>${d}</span></div>`).join('')}</div>
+   ${CT.cfg.reviews.length?`<div class="pdp-rev"><h2>What chai lovers say</h2><div class="rev">${CT.cfg.reviews.slice(0,3).map(v=>`<blockquote><div class="stars">★★★★★</div><p>“${CT.esc(v.text)}”</p><cite>${CT.esc(v.name)}</cite></blockquote>`).join('')}</div></div>`:''}
+   <div class="pdp-faq faq"><h2>Questions about ${CT.esc(p.name.replace(/^ChaskaTea /,'').replace(/\s*\|.*$/,''))}</h2>
+    <details open><summary>How many cups does the ${CT.esc(p.weight)} pack make?</summary><p>About ${cups} cups, using one heaped teaspoon (around 2.5 g) per cup.</p></details>
+    <details><summary>Is cash on delivery available?</summary><p>Yes. Choose Cash on Delivery at checkout. Paying online instead saves you ₹${p.prepaidDiscount||10} more on this pack.</p></details>
+    <details><summary>How long does delivery take?</summary><p>Orders are dispatched within 1–2 days and usually arrive in 3–7 working days, with a tracking link by SMS and email.</p></details>
+    <details><summary>Does it contain any added flavour or colour?</summary><p>No. It is 100% natural Assam CTC tea. The colour and aroma come only from the tea leaf.</p></details>
+   </div>
+  </section>`;
   const upd=()=>{$('#q').textContent=qty};
   $('#m')&&($('#m').onclick=()=>{qty=Math.max(1,qty-1);upd()}); $('#pl')&&($('#pl').onclick=()=>{qty=Math.min(20,qty+1);upd()});
   const add=(el)=>{CT.addToCart(p.id,qty,el);CT.toast('Added to cart',{href:'/cart',label:'View cart'})};

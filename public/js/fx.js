@@ -1,4 +1,3 @@
-
 /* ChaskaTea effects layer (v3). Progressive: every block is optional and skips on reduced motion or missing data. */
 (function(){
 'use strict';
@@ -72,7 +71,7 @@ function scrollFx(){
 }
 
 /* ---------- marquee ticker ---------- */
-function marquee(){
+function marquee(){if(document.body.dataset.plain)return;
   const rib=$('.ribbon .row'); if(!rib)return;
   const items=[...rib.querySelectorAll('span')].map(s=>s.textContent.trim()).filter(Boolean);
   const one=items.map(t=>`<span>${esc(t)}</span>`).join('');
@@ -80,7 +79,7 @@ function marquee(){
 }
 
 /* ---------- animated counters (home) ---------- */
-function counters(){
+function counters(){if(document.body.dataset.plain)return;
   const rib=$('.ribbon'); if(!rib||$('.stats'))return;
   const sec=document.createElement('section');sec.className='stats';
   sec.innerHTML=`<div class="wrap"><div class="row">
@@ -97,7 +96,7 @@ function counters(){
 }
 
 /* ---------- hero leaves (canvas particles) ---------- */
-function leaves(){
+function leaves(){if(document.body.dataset.plain)return;
   const hero=$('.hero'); if(!hero||RM)return;
   const c=document.createElement('canvas');c.className='fx-leaves';c.setAttribute('aria-hidden','true');hero.prepend(c);
   const g=c.getContext('2d');let W,H,dpr=Math.min(2,devicePixelRatio||1),ps=[],vis=true;
@@ -122,7 +121,7 @@ function leaves(){
 }
 
 /* ---------- find-your-tea quiz (home) ---------- */
-function quiz(){
+function quiz(){if(document.body.dataset.plain)return;
   const cta=$('.cta-band'); if(!cta||$('.quiz'))return;
   const host=cta.closest('section'); if(!host)return;
   const sec=document.createElement('section');sec.className='s';sec.style.paddingTop='0';
@@ -152,14 +151,14 @@ function quiz(){
     const inCat=all.filter(p=>!cat||p.category===cat.slug);
     const pick=inCat.find(p=>String(p.weight||'').toLowerCase().includes(state.pack.replace('kg',' kg').replace('1 kg','1kg').replace('1kg','1'))) || inCat[0] || all[0];
     $('#qres').textContent=pick?`Your cup: ${pick.name.replace(/^ChaskaTea /,'')}`:'Your cup is ready';
-    $('#qout').innerHTML=pick?`<div class="result"><div>${CT.card(pick,0).replace(/class="card rv d0"/,'class="card"')}</div><div><p style="color:var(--muted);font-weight:300;font-size:1.05rem;max-width:30em">Picked from our ${esc(cat?cat.name:'range')} for ${state.taste==='milk'?'milk and sugar':state.taste==='plain'?'a plain, strong cup':'a light, fresh cup'}, in the pack size that fits how much you drink.</p><div class="ctrls" style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem"><a class="btn" href="/product?s=${esc(pick.slug)}">See this tea</a><a class="btn ghost" href="/shop${cat?'?cat='+esc(cat.slug):''}">All ${esc(cat?cat.name:'teas')}</a></div><button class="btn ghost sm" id="qredo" style="margin-top:1rem">Start again</button></div></div>`:'';
+    $('#qout').innerHTML=pick?`<div class="result"><div>${CT.card(pick,0).replace(/class="card rv d0"/,'class="card"')}</div><div><p style="color:var(--muted);font-weight:300;font-size:1.05rem;max-width:30em">Picked from our ${esc(cat?cat.name:'range')} for ${state.taste==='milk'?'milk and sugar':state.taste==='plain'?'a plain, strong cup':'a light, fresh cup'}, in the pack size that fits how much you drink.</p><div class="ctrls" style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem"><a class="btn" href="/products/${esc(pick.slug)}">See this tea</a><a class="btn ghost" href="/shop${cat?'?cat='+esc(cat.slug):''}">All ${esc(cat?cat.name:'teas')}</a></div><button class="btn ghost sm" id="qredo" style="margin-top:1rem">Start again</button></div></div>`:'';
     $('#qredo')?.addEventListener('click',()=>{sec.querySelectorAll('.q').forEach(q=>q.classList.remove('on'));sec.querySelector('.q[data-step="0"]').classList.add('on');setBar(0)});
     const rv=$('#qout .card');if(rv)rv.classList.add('in');
   }
 }
 
 /* ---------- brew guide with steep timer (product page) ---------- */
-function brew(){
+function brew(){if(document.body.dataset.plain)return;
   if(path!=='/product')return;
   const slug=new URLSearchParams(location.search).get('s');
   (async()=>{
@@ -188,7 +187,7 @@ function brew(){
 }
 
 /* ---------- brand story (about page) ---------- */
-function story(){
+function story(){if(document.body.dataset.plain)return;
   if(path!=='/about'||$('.story'))return;
   const sec=document.createElement('section');sec.className='story';
   sec.innerHTML=`<div class="wrap">
@@ -224,7 +223,7 @@ function heroScroll(){
 }
 
 /* ---------- giant outlined type band (home) ---------- */
-function bigBand(){
+function bigBand(){if(document.body.dataset.plain)return;
   if(path!=='/'||$('.bigband'))return;
   const anchor=$('.stats')||$('.ribbon'); if(!anchor)return;
   const words=['ASSAM','KADAK','MASALA','CTC','DUST','CLASSIC','PREMIUM','SUPREME'];

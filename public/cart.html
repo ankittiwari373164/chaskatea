@@ -1,13 +1,19 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Your cart — ChaskaTea</title><meta name="description" content="ChaskaTea — premium natural Assam tea. Free delivery, cash on delivery, prepaid savings.">
-<meta name="theme-color" content="#2e1f7a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="ChaskaTea">
+<title>Your Cart | ChaskaTea</title>
+<meta name="description" content="Your ChaskaTea cart.">
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://www.chaskatea.com/cart">
+<meta property="og:site_name" content="ChaskaTea"><meta property="og:locale" content="en_IN"><meta property="og:type" content="website">
+<meta property="og:title" content="Your Cart | ChaskaTea"><meta property="og:description" content="Your ChaskaTea cart."><meta property="og:url" content="https://www.chaskatea.com/cart"><meta property="og:image" content="https://www.chaskatea.com/img/og-chaskatea.jpg">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Your Cart | ChaskaTea"><meta name="twitter:description" content="Your ChaskaTea cart."><meta name="twitter:image" content="https://www.chaskatea.com/img/og-chaskatea.jpg">
+<meta name="theme-color" content="#2e1f7a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="ChaskaTea">
 <link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/img/icon-192.png"><link rel="apple-touch-icon" href="/img/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,0..100;1,9..144,400..700,0..100&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/styles.css?v=3"><link rel="stylesheet" href="/css/bold.css?v=5"><link rel="stylesheet" href="/css/theme.css?v=15">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css?v=3"><link rel="stylesheet" href="/css/bold.css?v=5"><link rel="stylesheet" href="/css/theme.css?v=18">
+<script src="/js/track.js?v=16"></script>
 </head><body class="">
 <div id="chrome-top"></div>
 <main id="main">
@@ -18,7 +24,7 @@
 
 </main>
 <div id="chrome-foot"></div>
-<script src="/js/app.js?v=6"></script><script src="/js/fx.js?v=5" defer></script>
+<script src="/js/app.js?v=16"></script><script src="/js/fx.js?v=16" defer></script>
 <script>
 
 CT.ready(async()=>{
@@ -32,7 +38,7 @@ CT.ready(async()=>{
     const cm=q.couponError?`<div class="cmsg bad">${CT.esc(q.couponError)}</div>`:(q.coupon?`<div class="cmsg ok">“${CT.esc(q.coupon.code)}” applied — you save ${CT.inr(q.coupon.amount)} </div>`:'<div class="cmsg"></div>');
     const online=CT.cfg.settings.payments.razorpay.enabled&&CT.cfg.settings.payments.prepaidDiscount;
     const ppSave=q.lines.reduce((s,l)=>s+l.prepaid*l.qty,0);
-    $('#cart').innerHTML=`<div class="cartwrap"><div>${q.lines.map(l=>`<div class="line"><a class="th" href="/product?s=${CT.esc(l.slug)}"><img src="${CT.esc(l.image)}" alt=""></a><div><h4>${CT.esc(l.name)}</h4><div class="price"><b>${CT.inr(l.price)}</b>${l.mrp>l.price?`<s>${CT.inr(l.mrp)}</s>`:''}</div><button class="rm" data-rm="${l.id}">Remove</button></div>
+    $('#cart').innerHTML=`<div class="cartwrap"><div>${q.lines.map(l=>`<div class="line"><a class="th" href="/products/${CT.esc(l.slug)}"><img src="${CT.esc(l.image)}" alt=""></a><div><h4>${CT.esc(l.name)}</h4><div class="price"><b>${CT.inr(l.price)}</b>${l.mrp>l.price?`<s>${CT.inr(l.mrp)}</s>`:''}</div><button class="rm" data-rm="${l.id}">Remove</button></div>
       <div class="lt"><div class="qty"><button data-d="-1" data-id="${l.id}" aria-label="Less">−</button><span>${l.qty}</span><button data-d="1" data-id="${l.id}" aria-label="More">+</button></div><b style="font-family:var(--font-d);font-size:1.2rem">${CT.inr(l.price*l.qty)}</b></div></div>`).join('')}
      ${q.errors.map(e=>`<p class="cmsg bad">${CT.esc(e)}</p>`).join('')}</div>
      <aside class="sum"><h3>Order summary</h3>

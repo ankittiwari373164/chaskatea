@@ -1,4 +1,3 @@
-
 (function(){
 'use strict';
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -48,6 +47,7 @@ const saveCart=()=>{ls.set('ct_cart',CT.cart);document.dispatchEvent(new Event('
 CT.cartCount=()=>CT.cart.reduce((s,i)=>s+i.qty,0);
 CT.addToCart=(id,qty=1,fromEl)=>{
   const it=CT.cart.find(i=>i.id===id); if(it)it.qty=Math.min(50,it.qty+qty); else CT.cart.push({id,qty}); saveCart();
+  try{window.CTtrack&&CTtrack.add(CT.pmap[id],qty)}catch(e){}
   if(fromEl)fly(fromEl); const b=$$('.cart-badge'); b.forEach(x=>{x.classList.remove('bump');void x.offsetWidth;x.classList.add('bump')});
 };
 CT.setQty=(id,qty)=>{if(qty<=0)CT.cart=CT.cart.filter(i=>i.id!==id);else{const it=CT.cart.find(i=>i.id===id);if(it)it.qty=Math.min(50,qty)}saveCart()};
@@ -68,12 +68,12 @@ CT.toggleWish=async(id,btn)=>{
 };
 
 /* ---------- product card ---------- */
-CT.card=(p,i=0)=>{
+CT.pmap={};CT.card=(p,i=0)=>{CT.pmap[p.id]=p;
   const off=p.mrp>p.price?Math.round((1-p.price/p.mrp)*100):0;
   return `<article class="card rv d${i%3}" data-pic>
-  <a class="pic t-${esc(p.category)}" href="/product?s=${esc(p.slug)}" aria-label="${esc(p.name)}"><img src="${esc(p.images[0]||'/img/chaska-tea-logo.webp')}" alt="${esc(p.name)}" loading="lazy" width="400" height="400">${off?`<span class="off">${off}% OFF</span>`:''}</a>
+  <a class="pic t-${esc(p.category)}" href="/products/${esc(p.slug)}" aria-label="${esc(p.name)}"><img src="${esc(p.images[0]||'/img/chaska-tea-logo.webp')}" alt="${esc(p.name)}" loading="lazy" width="400" height="400">${off?`<span class="off">${off}% OFF</span>`:''}</a>
   <button class="wl ${CT.wish.has(p.id)?'on':''}" data-id="${p.id}" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M12 21s-8-5.200-8-11a4.500 4.500 0 018-2.700A4.500 4.500 0 0120 10c0 5.800-8 11-8 11z"/></svg></button>
-  <div class="body"><span class="cat-l">${esc(p.category)} · ${esc(p.weight)}</span><h3><a href="/product?s=${esc(p.slug)}">${esc(p.name.replace(/^ChaskaTea /,''))}</a></h3>
+  <div class="body"><span class="cat-l">${esc(p.category)} · ${esc(p.weight)}</span><h3><a href="/products/${esc(p.slug)}">${esc(p.name.replace(/^ChaskaTea /,''))}</a></h3>
   <div class="price"><b>${inr(p.price)}</b>${p.mrp>p.price?`<s>${inr(p.mrp)}</s>`:''}</div>
   ${p.prepaidDiscount&&CT.cfg?.settings.payments.prepaidDiscount?`<div class="pp">+ ₹${p.prepaidDiscount} off on online payment</div>`:''}
   <div class="acts">${p.stock>0?`<button class="btn sm add" data-id="${p.id}">Add to cart</button><a class="btn sm dark buy" data-buy="${p.id}" href="/checkout?buy=${p.id}">Buy now</a>`:'<button class="btn sm" disabled>Sold out</button>'}</div></div></article>`;
@@ -88,10 +88,10 @@ const path=location.pathname.replace(/\/$/,'')||'/';
 function chrome(){
   const c=CT.cfg, s=c.settings.store;
   const strips=c.strips.map((x,i)=>`<a class="${i?'':'on'}" href="${esc(x.link||'/shop')}">${esc(clean(x.title))}</a>`).join('');
-  const nav=[['/','Home'],['/shop','Shop'],['/about','Our story'],['/contact','Contact']];
+  const nav=[['/','Home'],['/shop','Shop'],['/about','Our story'],['/blog','Blog'],['/contact','Contact']];
   const hdr=`${strips?`<div class="strip" aria-label="Offers"><div class="track">${strips}</div></div>`:''}
   <header class="hdr"><div class="wrap">
-   <a class="logo logo-img" href="/" aria-label="ChaskaTea home"><img src="/img/logo-mark.webp" alt="ChaskaTea" width="1536" height="872"></a>
+   <a class="logo logo-img" href="/" aria-label="ChaskaTea home"><img src="/img/logo-mark.webp" alt="ChaskaTea" width="360" height="204"></a>
    <nav class="nav desk">${nav.map(([h,t])=>`<a href="${h}" class="${path===h?'on':''}">${t}</a>`).join('')}</nav>
    <button class="appsearch" id="open-search" aria-label="Search">${I.search}<span>Search teas…</span></button>
    <div class="hdr-right">
@@ -102,25 +102,28 @@ function chrome(){
    </div></div></header>`;
   const slot=$('#chrome-top'); if(slot)slot.innerHTML=hdr;
   const tab=[['/','Home',I.home],['/shop','Shop',I.shop],['/account#wishlist','Saved',I.heart,'wish'],['/cart','Cart',I.cart,'cart'],[CT.user?'/account':'/login','Me',I.user]];
-  const act=h=>{const [p,hs]=h.split('#');if(hs)return path===p&&location.hash==='#'+hs;if(p==='/account')return path==='/account'&&location.hash!=='#wishlist';return p===path||(p==='/shop'&&path==='/product')||(p==='/login'&&(path==='/signup'||path==='/login'))};
+  const act=h=>{const [p,hs]=h.split('#');if(hs)return path===p&&location.hash==='#'+hs;if(p==='/account')return path==='/account'&&location.hash!=='#wishlist';return p===path||(p==='/shop'&&(path==='/product'||path.startsWith('/products/')))||(p==='/login'&&(path==='/signup'||path==='/login'))};
   const tb=document.createElement('nav');tb.className='tabbar';tb.setAttribute('aria-label','App navigation');
   tb.innerHTML=tab.map(([h,t,ic,b])=>`<a href="${h}" class="${act(h)?'on':''}">${ic}${b?`<span class="badge ${b}-badge zero"></span>`:''}<span>${t}</span></a>`).join('');
   document.body.appendChild(tb);
-  const f=$('#chrome-foot'); if(f)f.innerHTML=`<footer class="ftr"><div class="wrap"><div class="cols">
-    <div><a href="/" class="ftr-logo" aria-label="ChaskaTea home"><img src="/img/logo-full.png" alt="ChaskaTea — Taste of Happiness" width="1536" height="1090"></a><p style="max-width:26em;opacity:.75;font-weight:300;font-size:.92rem">Premium natural tea from the gardens of Assam. No artificial colours and no added flavours. Pure, natural, ChaskaTea.</p></div>
-    <div><h4>Shop</h4>${c.categories.map(x=>`<a href="/shop?cat=${esc(x.slug)}">${esc(x.name)}</a>`).join('')}<a href="/shop">All teas</a></div>
-    <div><h4>Help</h4><a href="/track">Track order</a><a href="/account">My account</a><a href="/shipping-returns">Shipping &amp; returns</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/contact">Contact</a></div>
-    <div><h4>Say hello</h4><a href="tel:${esc(s.phone.replace(/\s/g,''))}">${esc(s.phone)}</a><a href="https://wa.me/${esc(s.whatsapp)}" target="_blank" rel="noopener">WhatsApp us</a><a href="mailto:${esc(s.email)}">${esc(s.email)}</a><p style="opacity:.7;margin-top:.8rem">${esc(s.address)}</p></div>
-  </div><div class="fine"><span>© ${new Date().getFullYear()} ChaskaTea. All rights reserved.</span><span>Crafted with care in Assam, India</span></div></div></footer>`;
+  const f=$('#chrome-foot'); const SOC=(s.social||{}); const soc=[['ig',SOC.instagram||'https://www.instagram.com/chaskatea','Instagram'],['fb',SOC.facebook||'https://www.facebook.com/chaskatea','Facebook'],['yt',SOC.youtube||'https://www.youtube.com/@chaskatea','YouTube'],['wa','https://wa.me/'+s.whatsapp,'WhatsApp']];
+  const SI={ig:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>',fb:'<svg viewBox="0 0 24 24"><path d="M14 8h3V4h-3a4 4 0 00-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z"/></svg>',yt:'<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z"/></svg>',wa:'<svg viewBox="0 0 24 24"><path d="M4 20l1.300-4A8 8 0 1112 20a8 8 0 01-4-1z"/></svg>'};
+  if(f)f.innerHTML=`<footer class="ftr"><div class="wrap"><div class="cols">
+    <div><a href="/" class="ftr-logo" aria-label="ChaskaTea home"><img src="/img/logo-full.webp" alt="ChaskaTea — Taste of Happiness" width="520" height="369" loading="lazy"></a><p class="ftr-about">Natural Assam CTC tea with rich aroma and strong taste. No artificial colour, no added flavour. Packed fresh every week.</p>
+     <div class="soc">${soc.map(([k,u,t])=>`<a href="${esc(u)}" target="_blank" rel="noopener" aria-label="${t}">${SI[k]}</a>`).join('')}</div></div>
+    <div><h4>Shop</h4>${c.categories.map(x=>`<a href="/shop?cat=${esc(x.slug)}">${esc(x.name)} tea</a>`).join('')}<a href="/shop">All teas</a><a href="/blog">Blog</a></div>
+    <div><h4>Policies</h4><a href="/shipping-returns">Shipping &amp; returns</a><a href="/privacy">Privacy policy</a><a href="/terms">Terms &amp; conditions</a><a href="/track">Track order</a><a href="/account">My account</a></div>
+    <div><h4>Contact us</h4><a href="tel:${esc(s.phone.replace(/\s/g,''))}">${esc(s.phone)}</a><a href="https://wa.me/${esc(s.whatsapp)}" target="_blank" rel="noopener">WhatsApp orders</a><a href="mailto:${esc(s.email)}">${esc(s.email)}</a><a href="/contact">Bulk &amp; wholesale enquiry</a><p class="ftr-addr">${esc(s.address)}</p></div>
+  </div><div class="fine"><span>© ${new Date().getFullYear()} ChaskaTea. All rights reserved.</span><span>www.chaskatea.com · Secure payments by Razorpay · Shipping by Shiprocket</span></div></div></footer>`;
   $$('#open-search,#open-search2').forEach(b=>b.onclick=openSearch);
   badges();
 }
 function openSearch(){
   const sh=CT.sheet('Search',`<input class="field" id="sq" placeholder="Search premium, 1kg, combo…" autocomplete="off" style="margin-bottom:.8rem"><div id="sr"></div>`);
   const inp=$('#sq',sh);setTimeout(()=>inp.focus(),350);let t;
-  const show=async q=>{const r=await api('/api/products?q='+encodeURIComponent(q));$('#sr',sh).innerHTML=r.products.length?r.products.slice(0,7).map(p=>`<a class="sres" href="/product?s=${esc(p.slug)}"><img src="${esc(p.images[0])}" alt=""><div><b>${esc(p.name)}</b><br><small>${inr(p.price)} · ${esc(p.weight)}</small></div></a>`).join(''):'<p style="color:var(--muted)">No teas match that. Try another word?</p>'};
+  const show=async q=>{const r=await api('/api/products?q='+encodeURIComponent(q));$('#sr',sh).innerHTML=r.products.length?r.products.slice(0,7).map(p=>`<a class="sres" href="/products/${esc(p.slug)}"><img src="${esc(p.images[0])}" alt=""><div><b>${esc(p.name)}</b><br><small>${inr(p.price)} · ${esc(p.weight)}</small></div></a>`).join(''):'<p style="color:var(--muted)">No teas match that. Try another word?</p>'};
   inp.oninput=()=>{clearTimeout(t);t=setTimeout(()=>show(inp.value.trim()),200)};
-  api('/api/products?featured=1').then(r=>{$('#sr',sh).innerHTML='<small style="font-weight:500;letter-spacing:.24em;font-size:.62rem;color:var(--gold-d)">POPULAR</small>'+r.products.slice(0,5).map(p=>`<a class="sres" href="/product?s=${esc(p.slug)}"><img src="${esc(p.images[0])}" alt=""><div><b>${esc(p.name)}</b><br><small>${inr(p.price)} · ${esc(p.weight)}</small></div></a>`).join('')});
+  api('/api/products?featured=1').then(r=>{$('#sr',sh).innerHTML='<small style="font-weight:500;letter-spacing:.24em;font-size:.62rem;color:var(--gold-d)">POPULAR</small>'+r.products.slice(0,5).map(p=>`<a class="sres" href="/products/${esc(p.slug)}"><img src="${esc(p.images[0])}" alt=""><div><b>${esc(p.name)}</b><br><small>${inr(p.price)} · ${esc(p.weight)}</small></div></a>`).join('')});
 }
 
 /* ---------- reveal + counters ---------- */
