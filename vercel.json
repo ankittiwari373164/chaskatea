@@ -95,18 +95,6 @@
     {
       "source": "/admin",
       "destination": "/admin/index.html"
-    },
-    {
-      "source": "/shipping-returns",
-      "destination": "/policy.html"
-    },
-    {
-      "source": "/privacy",
-      "destination": "/policy.html"
-    },
-    {
-      "source": "/terms",
-      "destination": "/policy.html"
     }
   ],
   "headers": [
