@@ -187,7 +187,7 @@ function brew(){if(document.body.dataset.plain)return;
 }
 
 /* ---------- brand story (about page) ---------- */
-function story(){if(document.body.dataset.plain)return;
+function story(){return;
   if(path!=='/about'||$('.story'))return;
   const sec=document.createElement('section');sec.className='story';
   sec.innerHTML=`<div class="wrap">
