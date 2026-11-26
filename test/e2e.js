@@ -1,6 +1,5 @@
-
 'use strict';
-// End-to-end test: starts a throw-away store (temp database) + mock Razorpay/Shiprocket, then walks the real flows over HTTP.
+// End-to-end test: starts a throw-away store (temp database) + mock Razorpay/Shipmozo, then walks the real flows over HTTP.
 // Run:  node test/e2e.js
 const { spawn } = require('child_process');
 const path = require('path'); const os = require('os'); const fs = require('fs'); const crypto = require('crypto');
@@ -13,7 +12,7 @@ const jar = () => { let c = ''; return { async req(m, p, b, h = {}) { const r = 
 (async () => {
   const m = await mock.start(MPORT);
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ct-'));
-  const srv = spawn('node', ['server.js'], { cwd: path.join(__dirname, '..'), env: Object.assign({}, process.env, { PORT, DATA_DIR: dir, RAZORPAY_BASE: `http://localhost:${MPORT}`, SHIPROCKET_BASE: `http://localhost:${MPORT}` }), stdio: 'ignore' });
+  const srv = spawn('node', ['server.js'], { cwd: path.join(__dirname, '..'), env: Object.assign({}, process.env, { PORT, DATA_DIR: dir, RAZORPAY_BASE: `http://localhost:${MPORT}`, SHIPMOZO_BASE: `http://localhost:${MPORT}/sm` }), stdio: 'ignore' });
   await new Promise((r) => setTimeout(r, 1500));
   try {
     const guest = jar(), cust = jar(), admin = jar();
@@ -87,17 +86,18 @@ const jar = () => { let c = ''; return { async req(m, p, b, h = {}) { const r = 
     r = await admin.req('GET', '/api/admin/orders/' + n2); ok(r.j.order.paymentStatus === 'paid', 'webhook marked order paid');
     r = await admin.req('POST', `/api/admin/orders/${rnum}/refund`, { amount: 100 }); ok(r.s === 200, 'partial refund via API');
     r = await admin.req('GET', '/api/admin/payments'); ok(r.j.summary.paidOnline > 0 && r.j.payments.length >= 4, 'payments dashboard has data');
-    console.log('Shiprocket (against mock)');
-    r = await admin.req('POST', `/api/admin/orders/${rnum}/ship`, {}); ok(r.s === 400, 'shipping refused while Shiprocket is off');
-    r = await admin.req('PUT', '/api/admin/settings', { shiprocket: { email: 'api@shop.test', password: 'bad', enabled: false, pickupLocation: 'Primary', webhookToken: 'hooktok' } }); r = await admin.req('POST', '/api/admin/settings/test-shiprocket', {}); ok(r.s === 400, 'bad Shiprocket login detected');
-    r = await admin.req('PUT', '/api/admin/settings', { shiprocket: { password: 'srpass', enabled: true } }); r = await admin.req('POST', '/api/admin/settings/test-shiprocket', {}); ok(r.s === 200, 'Shiprocket login ok');
-    r = await admin.req('POST', `/api/admin/orders/${rnum}/ship`, {}); ok(r.s === 200 && r.j.order.shiprocket.awb === 'MOCKAWB' + r.j.order.shiprocket.shipmentId, 'shipment + AWB created');
-    ok(m.state.shipments[r.j.order.shiprocket.shipmentId].payment_method === 'Prepaid', 'payload marks online order as Prepaid');
-    r = await admin.req('POST', `/api/admin/orders/${num}/ship`, {}); ok(r.s === 200 && m.state.shipments[r.j.order.shiprocket.shipmentId].payment_method === 'COD', 'COD order shipped as COD');
+    console.log('Shipmozo (against mock)');
+    r = await admin.req('POST', `/api/admin/orders/${rnum}/ship`, {}); ok(r.s === 400, 'shipping refused while Shipmozo is off');
+    r = await admin.req('PUT', '/api/admin/settings', { shipmozo: { publicKey: 'PUBKEY', privateKey: 'bad', enabled: false, warehouseId: '64832', webhookToken: 'hooktok' } }); r = await admin.req('POST', '/api/admin/settings/test-shipmozo', {}); ok(r.s === 400, 'bad Shipmozo keys detected');
+    r = await admin.req('PUT', '/api/admin/settings', { shipmozo: { privateKey: 'PRIVKEY', enabled: true } }); r = await admin.req('POST', '/api/admin/settings/test-shipmozo', {}); ok(r.s === 200 && r.j.warehouses[0].id === 64832, 'Shipmozo keys ok + warehouses listed');
+    r = await admin.req('POST', `/api/admin/orders/${rnum}/ship`, {}); ok(r.s === 200 && r.j.order.shiprocket.awb === 'MOCKAWB' + rnum, 'shipment + AWB created');
+    ok(m.state.shipments[rnum].payment_type === 'PREPAID' && m.state.shipments[rnum].weight >= 100, 'payload marks online order as PREPAID with weight in grams');
+    r = await admin.req('POST', `/api/admin/orders/${num}/ship`, {}); ok(r.s === 200 && m.state.shipments[num].payment_type === 'COD' && Number(m.state.shipments[num].cod_amount) > 0, 'COD order shipped as COD with amount');
     r = await admin.req('POST', `/api/admin/orders/${rnum}/track`, {}); ok(r.s === 200 && r.j.order.status === 'shipped', 'tracking refresh moves order to shipped');
-    r = await guest.req('POST', '/api/track', { number: rnum, phone: '9876543210' }); ok(r.j.order.tracking && r.j.order.tracking.awb.startsWith('MOCKAWB'), 'customer sees AWB/tracking link');
-    r = await guest.req('POST', '/api/webhooks/shiprocket', { order_id: rnum, current_status: 'DELIVERED' }); ok(r.s === 401, 'shiprocket webhook needs token');
-    r = await guest.req('POST', '/api/webhooks/shiprocket', { order_id: rnum, current_status: 'DELIVERED' }, { 'x-api-key': 'hooktok' }); r = await admin.req('GET', '/api/admin/orders/' + rnum); ok(r.j.order.status === 'delivered', 'shiprocket webhook → delivered');
+    r = await admin.req('POST', `/api/admin/orders/${rnum}/shipment-label`, {}); ok(r.s === 200 && /label\.pdf$/.test(r.j.url), 'label URL returned');
+    r = await guest.req('POST', '/api/track', { number: rnum, phone: '9876543210' }); ok(r.j.order.tracking && r.j.order.tracking.awb.startsWith('MOCKAWB') && r.j.order.tracking.activities.length === 1, 'customer sees AWB and courier scans');
+    r = await guest.req('POST', '/api/webhooks/shipmozo', { order_id: rnum, current_status: 'Delivered' }); ok(r.s === 401, 'shipmozo webhook needs token');
+    r = await guest.req('POST', '/api/webhooks/shipmozo?token=hooktok', { awb_number: 'MOCKAWB' + rnum, current_status: 'Delivered' }); r = await admin.req('GET', '/api/admin/orders/' + rnum); ok(r.j.order.status === 'delivered', 'shipmozo webhook (by AWB) → delivered');
     console.log('Cancellation');
     r = await cust.req('POST', '/api/orders', { items: [{ id: p.id, qty: 1 }], paymentMethod: 'cod', address: addr }); const cn = r.j.order.number;
     r = await cust.req('POST', `/api/account/orders/${cn}/cancel`, {}); ok(r.s === 200 && r.j.order.status === 'cancelled', 'customer cancels own order');

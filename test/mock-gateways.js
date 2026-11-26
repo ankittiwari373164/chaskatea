@@ -1,6 +1,5 @@
-
 'use strict';
-// Tiny stand-ins for Razorpay and Shiprocket so the integration code can be exercised without real accounts.
+// Tiny stand-ins for Razorpay and Shipmozo so the integration code can be exercised without real accounts.
 // They mimic the real request/response shapes for the endpoints this store uses. NOT the real services.
 const http = require('http');
 const crypto = require('crypto');
@@ -18,19 +17,21 @@ function start(port) {
         if (req.method === 'GET' && url === '/v1/orders') return out(200, { entity: 'collection', count: 0, items: [] });
         if (/\/refund$/.test(url)) return out(200, { id: 'rfnd_MOCK1', amount: body.amount, status: 'processed' });
       }
-      // ---- Shiprocket ----
-      if (url === '/v1/external/auth/login') return body.email === 'api@shop.test' && body.password === 'srpass' ? out(200, { token: 'SRTOKEN123' }) : out(403, { message: 'Invalid email and password combination' });
-      if (url.startsWith('/v1/external/')) {
-        if (req.headers.authorization !== 'Bearer SRTOKEN123') return out(401, { message: 'Unauthenticated.' });
-        if (url === '/v1/external/orders/create/adhoc') {
-          for (const f of ['order_id', 'billing_pincode', 'billing_phone', 'order_items', 'payment_method', 'weight', 'pickup_location']) if (!body[f]) return out(422, { message: 'The ' + f + ' field is required.' });
-          const sid = 9000 + Object.keys(state.shipments).length; state.shipments[sid] = body; return out(200, { order_id: 5000 + sid, shipment_id: sid, status: 'NEW', status_code: 1 });
+      // ---- Shipmozo (base /sm) ----
+      if (url.startsWith('/sm/')) {
+        const ok1 = (data) => out(200, { result: '1', message: 'Success', data });
+        if (req.headers['public-key'] !== 'PUBKEY' || req.headers['private-key'] !== 'PRIVKEY') return out(200, { result: '0', message: 'Invalid public or private key', data: {} });
+        const p = url.slice(3);
+        if (p === '/get-warehouses') return ok1([{ id: 64832, default: '1', address_title: 'Assam Warehouse', pincode: '781001' }]);
+        if (p === '/push-order') {
+          for (const f of ['order_id', 'consignee_pin_code', 'consignee_phone', 'product_detail', 'payment_type', 'weight', 'warehouse_id']) if (!body[f] || (Array.isArray(body[f]) && !body[f].length)) return out(200, { result: '0', message: f + ' is required', data: {} });
+          const ref = 'REF' + (9000 + Object.keys(state.shipments).length); state.shipments[body.order_id] = body; return ok1({ order_id: body.order_id, reference_id: ref });
         }
-        if (url === '/v1/external/courier/assign/awb') return out(200, { awb_assign_status: 1, response: { data: { awb_code: 'MOCKAWB' + body.shipment_id, courier_name: 'Mock Express', courier_company_id: 7 } } });
-        if (url === '/v1/external/courier/generate/pickup') return out(200, { pickup_status: 1 });
-        if (url === '/v1/external/courier/generate/label') return out(200, { label_created: 1, label_url: 'https://example.test/label.pdf' });
-        if (url.startsWith('/v1/external/courier/track/awb/')) return out(200, { tracking_data: { track_status: 1, shipment_track: [{ current_status: state.trackStatus || 'IN TRANSIT' }], shipment_track_activities: [{ date: '2026-11-05', activity: 'In transit', location: 'Guwahati' }], track_url: 'https://shiprocket.co/tracking/' + url.split('/').pop(), etd: '2026-11-08' } });
-        if (url === '/v1/external/orders/cancel') return out(200, { message: 'Order cancelled successfully.' });
+        if (p === '/auto-assign-order') return ok1({ order_id: body.order_id, reference_id: 'R', awb_number: 'MOCKAWB' + body.order_id, courier_company: 'Mock Express', courier_company_service: 'Surface' });
+        if (p === '/schedule-pickup') return ok1({ order_id: body.order_id, awb_number: 'MOCKAWB' + body.order_id });
+        if (p.startsWith('/get-order-label/')) return ok1([{ label: 'https://example.test/label.pdf' }]);
+        if (p === '/track-order') return ok1({ order_id: 'x', awb_number: 'x', courier: 'Mock Express', expected_delivery_date: '2026-11-30', current_status: state.trackStatus || 'In Transit', scan_detail: [{ scan_date_time: '2026-11-27 10:00', scan_status: 'In Transit', scan_location: 'Guwahati' }] });
+        if (p === '/cancel-order') return ok1({ order_id: body.order_id });
       }
       out(404, { error: { description: 'not mocked: ' + url } });
     });

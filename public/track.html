@@ -12,7 +12,7 @@
 <link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/img/icon-192.png"><link rel="apple-touch-icon" href="/img/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/styles.css?v=3"><link rel="stylesheet" href="/css/bold.css?v=5"><link rel="stylesheet" href="/css/theme.css?v=20">
+<link rel="stylesheet" href="/css/styles.css?v=3"><link rel="stylesheet" href="/css/bold.css?v=5"><link rel="stylesheet" href="/css/theme.css?v=22">
 <script src="/js/track.js?v=20"></script>
 </head><body class="">
 <div id="chrome-top"></div>
@@ -31,7 +31,7 @@ CT.ready(()=>{
   $('#n').value=u.searchParams.get('n')||last.number||''; $('#p').value=last.phone||'';
   const go=async()=>{$('#e').textContent='';try{const r=await CT.api('/api/track',{body:{number:$('#n').value,phone:$('#p').value}});show(r.order)}catch(e){$('#e').textContent=e.message;$('#res').innerHTML=''}};
   const show=o=>{$('#res').innerHTML=`<div class="panel"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem"><h3 style="margin:0">Order ${CT.esc(o.number)}</h3><span class="pill ${o.status}">${CT.esc(o.statusLabel)}</span></div>
-   ${CT.progress(o.status)}${o.tracking?`<p><b>${CT.esc(o.tracking.courier||'Courier')}</b> · AWB ${CT.esc(o.tracking.awb)} · <a href="${CT.esc(o.tracking.url)}" target="_blank" rel="noopener"><b>Live tracking ↗</b></a></p>`:''}
+   ${CT.progress(o.status)}${o.tracking?`<p><b>${CT.esc(o.tracking.courier||'Courier')}</b> · AWB ${CT.esc(o.tracking.awb)}${o.tracking.etd?` · Expected by <b>${CT.esc(o.tracking.etd)}</b>`:''}${o.tracking.url?` · <a href="${CT.esc(o.tracking.url)}" target="_blank" rel="noopener"><b>Live tracking ↗</b></a>`:''}</p>${(o.tracking.activities||[]).length?`<ul class="scans">${o.tracking.activities.map(a=>`<li><b>${CT.esc(a.activity||'')}</b><span>${CT.esc(a.location||'')}${a.location&&a.date?' · ':''}${CT.esc(a.date||'')}</span></li>`).join('')}</ul>`:''}`:''}
    <ul class="tl">${o.timeline.slice().reverse().map((t,i)=>`<li class="${i===0?'cur':''}"><b>${CT.esc(t.label)}</b>${t.note?'<br>'+CT.esc(t.note):''}<br><small>${CT.fmtDate(t.at)}</small></li>`).join('')}</ul>
    <p style="font-size:.9rem">${o.items.map(i=>CT.esc(i.name.replace('ChaskaTea ',''))+' × '+i.qty).join(' · ')} — <b>${CT.inr(o.total)}</b> (${o.paymentMethod==='cod'?'Cash on delivery':'Paid online'})</p></div>`};
   $('#go').onclick=go; if($('#n').value&&$('#p').value)go();

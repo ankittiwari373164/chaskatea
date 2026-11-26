@@ -114,7 +114,7 @@ function chrome(){
     <div><h4>Shop</h4>${c.categories.map(x=>`<a href="/shop?cat=${esc(x.slug)}">${esc(x.name)} tea</a>`).join('')}<a href="/shop">All teas</a><a href="/blog">Blog</a></div>
     <div><h4>Policies</h4><a href="/shipping-returns">Shipping &amp; returns</a><a href="/privacy">Privacy policy</a><a href="/terms">Terms &amp; conditions</a><a href="/track">Track order</a><a href="/account">My account</a></div>
     <div><h4>Contact us</h4><a href="tel:${esc(s.phone.replace(/\s/g,''))}">${esc(s.phone)}</a><a href="https://wa.me/${esc(s.whatsapp)}" target="_blank" rel="noopener">WhatsApp orders</a><a href="mailto:${esc(s.email)}">${esc(s.email)}</a><a href="/contact">Bulk &amp; wholesale enquiry</a><p class="ftr-addr">${esc(s.address)}</p></div>
-  </div><div class="fine"><span>© ${new Date().getFullYear()} ChaskaTea. All rights reserved.</span><span>www.chaskatea.com · Secure payments by Razorpay · Shipping by Shiprocket</span></div></div></footer>`;
+  </div><div class="fine"><span>© ${new Date().getFullYear()} ChaskaTea. All rights reserved.</span><span>www.chaskatea.com · Secure payments by Razorpay · Shipping by Shipmozo</span></div></div></footer>`;
   $$('#open-search,#open-search2').forEach(b=>b.onclick=openSearch);
   badges();
 }

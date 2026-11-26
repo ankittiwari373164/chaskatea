@@ -743,3 +743,9 @@ body{background-color:var(--bg)!important;
 #b ul{padding-left:1.2rem}#b li{margin:.35rem 0}
 #b a{color:var(--leaf-d);font-weight:600}
 .pol-upd{color:#7a7596;font-size:.85rem}
+/* courier scan history */
+.scans{list-style:none;margin:.6rem 0 0;padding:0 0 0 1rem;border-left:2px solid var(--lime)}
+.scans li{position:relative;padding:.35rem 0 .35rem .6rem;font-size:.88rem}
+.scans li::before{content:"";position:absolute;left:-1.42rem;top:.75rem;width:9px;height:9px;border-radius:50%;background:var(--leaf)}
+.scans li:first-child::before{background:var(--indigo)}
+.scans b{display:block;color:var(--indigo)}.scans span{color:#7a7596;font-size:.8rem}
